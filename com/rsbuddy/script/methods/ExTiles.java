@@ -21,7 +21,7 @@ public class ExTiles {
 	 * @param c
 	 *            The color to fill the tile.
 	 */
-	public static void fillTileOnMap(final Graphics g, final Color c,
+	public static void fillOnMap(final Graphics g, final Color c,
 			final Tile... tiles) {
 		for (final Tile tile : tiles) {
 			if (tile == null || !tile.isOnMap()) {
@@ -43,7 +43,7 @@ public class ExTiles {
 	 * @param c
 	 *            The color to fill the tile.
 	 */
-	public static void fillTileOnScreen(final Graphics g, final Color c,
+	public static void fillOnScreen(final Graphics g, final Color c,
 			final Tile... tiles) {
 		for (final Tile tile : tiles) {
 			if (tile == null || !tile.isOnScreen()) {
@@ -107,12 +107,12 @@ public class ExTiles {
 	 * @return The closest diagonal tile between the player and the tile that is
 	 *         visible on the minimap.
 	 */
-	public static Tile getClosestTile(final Tile tile) {
+	public static Tile getClosest(final Tile tile) {
 		final Tile me = Players.getLocal().getLocation();
 		final Tile half = new Tile((me.getX() + tile.getLocation().getX()) / 2,
 				(me.getY() + tile.getLocation().getY()) / 2);
 		if (!half.isOnMap()) {
-			return getClosestTile(half);
+			return getClosest(half);
 		}
 		return half;
 	}
@@ -147,7 +147,7 @@ public class ExTiles {
 	 *            if it is on screen.
 	 * @return The nearest tile to the point.
 	 */
-	public static Tile getTileUnderPoint(final Point p, final boolean minimap) {
+	public static Tile getUnderPoint(final Point p, final boolean minimap) {
 		if (!Menu.contains("Walk here")) {
 			return null;
 		}
@@ -178,11 +178,12 @@ public class ExTiles {
 	/**
 	 * Checks wether or not the specified tile is blocked.
 	 * 
+	 * @author Biking
 	 * @param tile
 	 *            The tile to check.
 	 * @return <tt>true</tt> if the tile is blocked; <tt>false</tt> otherwise.
 	 */
-	public static boolean isTileBlocked(final Tile tile) {
+	public static boolean isBlocked(final Tile tile) {
 		final int[][] flags = Walking.getCollisionFlags(Game.getFloorLevel());
 		final Tile offset = Walking.getCollisionOffset(Game.getFloorLevel());
 		final Tile baseTile = Game.getMapBase();

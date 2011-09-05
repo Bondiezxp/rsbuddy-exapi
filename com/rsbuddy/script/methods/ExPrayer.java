@@ -153,8 +153,8 @@ public class ExPrayer {
 	 * 
 	 * @return The players' current prayer bonus.
 	 */
-	public static int getMyTotalPrayerBonus() {
-		return getTotalPrayerBonus(Players.getLocal());
+	public static int getMyPrayerBonus() {
+		return getPrayerBonus(Players.getLocal());
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class ExPrayer {
 	 *            The player to get the prayer bonus.
 	 * @return The specified players' prayer bonus.
 	 */
-	public static int getTotalPrayerBonus(final Player player) {
+	public static int getPrayerBonus(final Player player) {
 		int prayerBonus = 0;
 		outerLoop: for (final int item : player.getEquipment()) {
 			for (final Equipment equipment : Equipment.values()) {

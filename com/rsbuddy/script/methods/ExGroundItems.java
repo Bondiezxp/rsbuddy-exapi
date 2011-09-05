@@ -18,7 +18,7 @@ public class ExGroundItems {
 	 *         <tt>false</tt> otherwise.
 	 */
 	public static boolean atBoundary(final GroundItem item) {
-		if (!isGroundItemValid(item)) {
+		if (!isValid(item)) {
 			return false;
 		}
 		if (!item.getLocation().isOnScreen()) {
@@ -39,7 +39,7 @@ public class ExGroundItems {
 	 * @return <tt>true</tt> if no objects intersects the given ground item.
 	 */
 	public static boolean intersects(final GroundItem item) {
-		if (!isGroundItemValid(item)) {
+		if (!isValid(item)) {
 			return false;
 		}
 		for (final GameObject go : Objects.getLoaded()) {
@@ -72,7 +72,7 @@ public class ExGroundItems {
 	 * @return <tt>true</tt> if the ground item is valid; <tt>false</tt>
 	 *         otherwise.
 	 */
-	public static boolean isGroundItemValid(final GroundItem item) {
+	public static boolean isValid(final GroundItem item) {
 		if (item == null || item.getItem() == null
 				|| item.getItem().getId() == -1 || item.getLocation() == null) {
 			return false;
