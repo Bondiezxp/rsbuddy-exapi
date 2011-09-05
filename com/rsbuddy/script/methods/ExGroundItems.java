@@ -18,16 +18,10 @@ public class ExGroundItems {
 	 *         <tt>false</tt> otherwise.
 	 */
 	public static boolean atBoundary(final GroundItem item) {
-		if (!isValid(item)) {
+		if (!isValid(item) || !item.getLocation().isOnScreen()) {
 			return false;
 		}
-		if (!item.getLocation().isOnScreen()) {
-			return false;
-		}
-		if (intersects(item)) {
-			return true;
-		}
-		return false;
+		return intersects(item);
 	}
 
 	/**

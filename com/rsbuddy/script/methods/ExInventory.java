@@ -27,7 +27,7 @@ public class ExInventory {
 				for (int r = 0; r < 7; r += 1) {
 					boolean found = false;
 					final Item item = Inventory.getAllItems()[c + r * 4];
-					for (int i = 0; i < ids.length && !found; ++i) {
+					for (int i = 0; !found && i < ids.length; i += 1) {
 						found = ids[i] == item.getId();
 					}
 					if (found) {
@@ -40,7 +40,7 @@ public class ExInventory {
 				for (int c = 0; c < 4; c += 1) {
 					boolean found = false;
 					final Item item = Inventory.getAllItems()[c + r * 4];
-					for (int i = 0; i < ids.length && !found; ++i) {
+					for (int i = 0; !found && i < ids.length; i += 1) {
 						found = ids[i] == item.getId();
 					}
 					if (found) {
@@ -49,7 +49,6 @@ public class ExInventory {
 				}
 			}
 		}
-		Task.sleep(500, 800);
 		return null;
 	}
 
@@ -66,14 +65,14 @@ public class ExInventory {
 	}
 
 	/**
-	 * Hovers the item at the specified slot for 3 - 5 seconds.
+	 * Hovers the item at the specified slot for 1 - 2 seconds.
 	 * 
 	 * @param slot
 	 *            The slot of the item.
 	 * @return <tt>true</tt> if the item was hovered.
 	 */
 	public static boolean hoverItem(final int slot) {
-		return hoverItem(slot, Random.nextInt(3000, 5000));
+		return hoverItem(slot, Random.nextInt(1000, 2000));
 	}
 
 	/**
@@ -99,21 +98,21 @@ public class ExInventory {
 	 *         hovered.
 	 */
 	public static boolean hoverItem(final int slot, final String action) {
-		if (!hoverItem(slot, 100)) {
+		if (!hoverItem(slot, 0)) {
 			return false;
 		}
 		return ExMenu.hoverAction(action);
 	}
 
 	/**
-	 * Hovers the given item for 3 - 5 seconds.
+	 * Hovers the given item for 1 - 2 seconds.
 	 * 
 	 * @param item
 	 *            The item to hover.
 	 * @return <tt>true</tt> if the item was hovered.
 	 */
 	public static boolean hoverItem(final Item item) {
-		return hoverItem(item, Random.nextInt(3000, 5000));
+		return hoverItem(item, Random.nextInt(1000, 2000));
 	}
 
 	/**

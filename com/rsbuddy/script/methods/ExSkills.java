@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 
 public class ExSkills {
 
+	private static final double ONE_HOUR = 3600000D;
+
 	/**
 	 * Gets the exp to the specified level in the given skill.
 	 * 
@@ -76,7 +78,7 @@ public class ExSkills {
 		if (xpGainedPerHour < 1) {
 			return 0L;
 		}
-		return getExpToLevel(skill, level) * 3600 / xpGainedPerHour * 1000;
+		return (long) (getExpToLevel(skill, level) * ONE_HOUR / xpGainedPerHour);
 	}
 
 	/**
