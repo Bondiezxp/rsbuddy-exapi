@@ -69,7 +69,6 @@ public class ExMouse {
 	}
 
 	private static final LinkedList<MousePathPoint> mousePath = new LinkedList<MousePathPoint>();
-
 	private static final LinkedList<MouseClickPoint> mouseClickPoints = new LinkedList<MouseClickPoint>();
 
 	/**
@@ -149,6 +148,20 @@ public class ExMouse {
 		}
 	}
 
+	/**
+	 * Generates a random distance between minDistance and maxDistance from the
+	 * current position of the mouse by generating random vector and then
+	 * multiplying it by a random number between minDistance and maxDistance.
+	 * The maximum distance is cut short if the mouse would go off screen in the
+	 * direction it chose.
+	 * 
+	 * @author Enfilade
+	 * @param minDistance
+	 *            The minimum distance the cursor will move
+	 * @param maxDistance
+	 *            The maximum distance the cursor will move (exclusive)
+	 * @return A random point between minDistance and maxDistance.
+	 */
 	private static Point generateRandomPoint(final int minDistance,
 			final int maxDistance) {
 		double xvec = Math.random();
