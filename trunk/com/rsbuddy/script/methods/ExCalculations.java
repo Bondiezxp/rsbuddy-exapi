@@ -16,29 +16,6 @@ public class ExCalculations {
 
 	public static class Paint {
 
-		private static enum MoneyFormat {
-
-			THOUSAND("k", 3),
-			MILLION("m", 6),
-			BILLION("b", 9);
-
-			private final String sign;
-			private final int length;
-
-			private MoneyFormat(final String sign, final int length) {
-				this.sign = sign;
-				this.length = length;
-			}
-
-			public int getLength() {
-				return length;
-			}
-
-			public String getSign() {
-				return sign;
-			}
-		}
-
 		public static enum TimeFormat {
 
 			DIGITAL("0#:0#"),
@@ -56,6 +33,8 @@ public class ExCalculations {
 				return format;
 			}
 		}
+
+		private static final double ONE_HOUR = 3600000D;
 
 		/**
 		 * Formats the specified double with commas and the given amount of
@@ -143,7 +122,7 @@ public class ExCalculations {
 			if (num < 1 || runTime < 1) {
 				return 0;
 			}
-			return (int) (3600000.0 / runTime * num);
+			return (int) (ONE_HOUR / runTime * num);
 		}
 
 		/**
@@ -178,24 +157,23 @@ public class ExCalculations {
 			if (formatted.length() < 4) {
 				return formatted;
 			}
-			MoneyFormat format = MoneyFormat.THOUSAND;
+			String sign = "k";
+			int length = 3;
 			if (formatted.length() > 6 && formatted.length() < 9) {
-				format = MoneyFormat.MILLION;
+				sign = "m";
+				length = 6;
 			} else if (formatted.length() > 9) {
-				format = MoneyFormat.BILLION;
+				sign = "b";
+				length = 9;
 			}
-			if (formatted.charAt(formatted.length() - format.getLength()) == '0') {
-				return formatted.substring(0,
-						formatted.length() - format.getLength())
-						+ format.getSign();
+			if (formatted.charAt(formatted.length() - length) == '0') {
+				return formatted.substring(0, formatted.length() - length)
+						+ sign;
 			}
-			return formatted.substring(0,
-					formatted.length() - format.getLength())
+			return formatted.substring(0, formatted.length() - length)
 					+ "."
-					+ formatted.substring(
-							formatted.length() - format.getLength(),
-							formatted.length() - format.getLength() + 1)
-					+ format.getSign();
+					+ formatted.substring(formatted.length() - length,
+							formatted.length() - length + 1) + sign;
 		}
 	}
 
@@ -210,11 +188,11 @@ public class ExCalculations {
 		if (model == null) {
 			return null;
 		}
-		final Polygon[] polygons = model.getTriangles();
+		final Polygon[] trianlges = model.getTriangles();
 		final LinkedList<Point> points = new LinkedList<Point>();
-		for (final Polygon polygon : polygons) {
-			for (int i = 0; i < polygon.npoints; i += 1) {
-				points.add(new Point(polygon.xpoints[i], polygon.ypoints[i]));
+		for (final Polygon triangle : trianlges) {
+			for (int i = 0; i < triangle.npoints; i += 1) {
+				points.add(new Point(triangle.xpoints[i], triangle.ypoints[i]));
 			}
 		}
 		int xTotal = 0;
@@ -237,12 +215,12 @@ public class ExCalculations {
 	 * @return A random point in the model.
 	 */
 	public static Point getRandomPoint(final Model model) {
-		final Polygon[] triangles = model.getTriangles();
-		if (triangles.length == 0) {
+		if (model == null || model.getTriangles() == null
+				|| model.getTriangles().length < 1) {
 			return null;
 		}
-		final Polygon p = triangles[Random.nextInt(0, triangles.length)];
-		return getRandomPoint(p);
+		final Polygon[] triangles = model.getTriangles();
+		return getRandomPoint(triangles[Random.nextInt(0, triangles.length)]);
 	}
 
 	/**
@@ -285,11 +263,12 @@ public class ExCalculations {
 	 * @return A random point in the tile.
 	 */
 	public static Point getRandomPoint(final Tile tile) {
-		final Point bl = tile.getPoint(0, 0, 0), br = tile.getPoint(1, 0, 0), tr = tile
-				.getPoint(1, 1, 0), tl = tile.getPoint(0, 1, 0);
-		final Polygon p = new Polygon(new int[] { bl.x, br.x, tr.x, tl.x },
-				new int[] { bl.y, br.y, tr.y, tl.y }, 4);
-		return getRandomPoint(p);
+		final Point bl = tile.getPoint(0, 0, 0);
+		final Point br = tile.getPoint(1, 0, 0);
+		final Point tr = tile.getPoint(1, 1, 0);
+		final Point tl = tile.getPoint(0, 1, 0);
+		return getRandomPoint(new Polygon(new int[] { bl.x, br.x, tr.x, tl.x },
+				new int[] { bl.y, br.y, tr.y, tl.y }, 4));
 	}
 
 	/**
@@ -302,8 +281,8 @@ public class ExCalculations {
 	public static boolean isPointOnScreen(final Point... points) {
 		for (final Point point : points) {
 			if (point == null || point.x > Game.getCanvasSize().width
-					|| point.y > Game.getCanvasSize().height
-					|| Calculations.isPointOnScreen(point)) {
+					|| point.y > Game.getCanvasSize().height || point.x < 0
+					|| point.y < 0 || !Calculations.isPointOnScreen(point)) {
 				return false;
 			}
 		}

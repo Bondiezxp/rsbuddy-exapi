@@ -2,9 +2,16 @@ package com.rsbuddy.script.methods;
 
 import com.rsbuddy.script.wrappers.Player;
 
+/**
+ * 
+ * @author Ramus
+ * @author Swell
+ * 
+ */
 public class ExPrayer {
 
 	public enum Equipment {
+
 		SPIRIT_SHIELD(13734, 1),
 		OTHER_SPIRIT_SHIELDS(new int[] { 1373, 13744, 13738, 13742, 13740 }, 3),
 		FALADOR_SHIELD_1(14577, 3),

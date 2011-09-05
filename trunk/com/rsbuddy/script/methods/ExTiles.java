@@ -176,9 +176,8 @@ public class ExTiles {
 	}
 
 	/**
-	 * Checks wether or not the specified tile is blocked.
+	 * Author - Biking. Checks wether or not the specified tile is blocked.
 	 * 
-	 * @author Biking
 	 * @param tile
 	 *            The tile to check.
 	 * @return <tt>true</tt> if the tile is blocked; <tt>false</tt> otherwise.

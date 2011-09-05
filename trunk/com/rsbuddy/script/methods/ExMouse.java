@@ -68,8 +68,8 @@ public class ExMouse {
 		}
 	}
 
-	private static final LinkedList<MousePathPoint> mousePath = new LinkedList<MousePathPoint>();
-	private static final LinkedList<MouseClickPoint> mouseClickPoints = new LinkedList<MouseClickPoint>();
+	private static final LinkedList<MousePathPoint> MOUSE_PATH = new LinkedList<MousePathPoint>();
+	private static final LinkedList<MouseClickPoint> MOUSE_CLICKS = new LinkedList<MouseClickPoint>();
 
 	/**
 	 * Draws a simple rotating mouse.
@@ -111,18 +111,18 @@ public class ExMouse {
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-		while (!mousePath.isEmpty() && mousePath.peek().isUp()) {
-			mousePath.remove();
+		while (!MOUSE_PATH.isEmpty() && MOUSE_PATH.peek().isUp()) {
+			MOUSE_PATH.remove();
 		}
 		final MousePathPoint mpp = new MousePathPoint(point.x, point.y);
-		if (mousePath.isEmpty() || !mousePath.getLast().equals(mpp)) {
-			mousePath.add(mpp);
+		if (MOUSE_PATH.isEmpty() || !MOUSE_PATH.getLast().equals(mpp)) {
+			MOUSE_PATH.add(mpp);
 		}
 		MousePathPoint lastPoint = null;
-		for (final MousePathPoint p : mousePath) {
+		for (final MousePathPoint p : MOUSE_PATH) {
 			if (p.x < 0 || p.y < 0 || p.x > Game.getCanvasSize().width
 					|| p.y > Game.getCanvasSize().width) {
-				mousePath.remove(p);
+				MOUSE_PATH.remove(p);
 			}
 			if (lastPoint != null && lastPoint.x > 0 && lastPoint.y > 0
 					&& lastPoint.x < Game.getCanvasSize().width
@@ -132,30 +132,28 @@ public class ExMouse {
 			}
 			lastPoint = p;
 		}
-		while (!mouseClickPoints.isEmpty() && mouseClickPoints.peek().isUp()) {
-			mouseClickPoints.remove();
+		while (!MOUSE_CLICKS.isEmpty() && MOUSE_CLICKS.peek().isUp()) {
+			MOUSE_CLICKS.remove();
 		}
 		final long clickTime = Mouse.getPressTime();
 		final Point lastClickPos = Mouse.getPressLocation();
-		if (mouseClickPoints.isEmpty()
-				|| !mouseClickPoints.getLast().equals(clickTime)) {
-			mouseClickPoints.add(new MouseClickPoint(lastClickPos.x,
+		if (MOUSE_CLICKS.isEmpty() || !MOUSE_CLICKS.getLast().equals(clickTime)) {
+			MOUSE_CLICKS.add(new MouseClickPoint(lastClickPos.x,
 					lastClickPos.y, clickTime));
 		}
-		for (final MouseClickPoint c : mouseClickPoints) {
+		for (final MouseClickPoint c : MOUSE_CLICKS) {
 			g.setColor(c.getColor(mouseClicks));
 			g.fillOval(c.x - 2, c.y - 2, 4, 4);
 		}
 	}
 
 	/**
-	 * Generates a random distance between minDistance and maxDistance from the
-	 * current position of the mouse by generating random vector and then
-	 * multiplying it by a random number between minDistance and maxDistance.
-	 * The maximum distance is cut short if the mouse would go off screen in the
-	 * direction it chose.
+	 * Author - Enfilade. Generates a random distance between minDistance and
+	 * maxDistance from the current position of the mouse by generating random
+	 * vector and then multiplying it by a random number between minDistance and
+	 * maxDistance. The maximum distance is cut short if the mouse would go off
+	 * screen in the direction it chose.
 	 * 
-	 * @author Enfilade
 	 * @param minDistance
 	 *            The minimum distance the cursor will move
 	 * @param maxDistance
@@ -558,11 +556,11 @@ public class ExMouse {
 	}
 
 	/**
-	 * Moves the mouse off the screen for 1 - 8 seconds, then moves the mouse
+	 * Moves the mouse off the screen for 5 - 10 seconds, then moves the mouse
 	 * back to a point close to where it was.
 	 */
 	public static void moveOffScreen() {
-		moveOffScreen(Random.nextInt(1250, 8000));
+		moveOffScreen(Random.nextInt(5000, 10000));
 	}
 
 	/**
@@ -605,13 +603,14 @@ public class ExMouse {
 	}
 
 	/**
-	 * Opens the specified tabs.
+	 * Opens the specified tabs. Waits for 5 - 10 seconds before opening the
+	 * next tab.
 	 * 
 	 * @param tabs
 	 *            The tabs to open. Use Game.TAB_...
 	 */
 	public static void openTabs(final int[] tabs) {
-		openTabs(tabs, Random.nextInt(3000, 8000));
+		openTabs(tabs, Random.nextInt(5000, 10000));
 	}
 
 	/**
@@ -628,19 +627,19 @@ public class ExMouse {
 			if (Game.getCurrentTab() != tab) {
 				Game.openTab(tab);
 			}
-			Task.sleep(Random.nextInt(waitTime - waitTime / 10, waitTime
-					+ waitTime / 10));
+			Task.sleep(waitTime);
 		}
 	}
 
 	/**
-	 * Opens a number(x) of tabs.
+	 * Opens a number(x) of tabs. Waits for 5 - 10 seconds before opening the
+	 * next tab.
 	 * 
 	 * @param x
 	 *            The number of tabs to open.
 	 */
 	public static void openXTabs(final int x) {
-		openXTabs(x, Random.nextInt(3000, 8000));
+		openXTabs(x, Random.nextInt(5000, 10000));
 	}
 
 	/**
@@ -658,8 +657,7 @@ public class ExMouse {
 			if (Game.getCurrentTab() != tab) {
 				Game.openTab(tab);
 			}
-			Task.sleep(Random.nextInt(waitTime - waitTime / 10, waitTime
-					+ waitTime / 10));
+			Task.sleep(waitTime);
 		}
 	}
 
