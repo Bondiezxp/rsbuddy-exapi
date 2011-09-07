@@ -4,6 +4,9 @@ import java.text.DecimalFormat;
 
 public class ExSkills {
 
+	/**
+	 * One hour in milliseconds.
+	 */
 	private static final double ONE_HOUR = 3600000D;
 
 	/**

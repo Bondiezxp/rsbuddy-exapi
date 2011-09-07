@@ -3,10 +3,8 @@ package com.rsbuddy.script.methods;
 import com.rsbuddy.script.wrappers.Player;
 
 /**
- * 
  * @author Ramus
  * @author Swell
- * 
  */
 public class ExPrayer {
 

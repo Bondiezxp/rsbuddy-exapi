@@ -1,6 +1,10 @@
 package com.rsbuddy.script;
 
+import com.rsbuddy.event.events.AnimationEvent;
+import com.rsbuddy.event.events.HealthEvent;
 import com.rsbuddy.event.events.MessageEvent;
+import com.rsbuddy.event.events.SettingEvent;
+import com.rsbuddy.event.events.StanceEvent;
 import com.rsbuddy.event.listeners.CharacterListener;
 import com.rsbuddy.event.listeners.MessageListener;
 import com.rsbuddy.event.listeners.PaintListener;
@@ -56,17 +60,17 @@ public abstract class ExScript extends ActiveScript implements
 				if (data[1] != anim) {
 					data[0] = data[1];
 					data[1] = anim;
-					onAnimationChange(c, data[0], data[1]);
+					onAnimationChange(new AnimationEvent(c, data[0], data[1]));
 				}
 				if (data[3] != hpp) {
 					data[2] = data[3];
 					data[3] = hpp;
-					onHealthChange(c, data[2], data[3]);
+					onHealthChange(new HealthEvent(c, data[2], data[3]));
 				}
 				if (data[5] != stance) {
 					data[4] = data[5];
 					data[5] = stance;
-					onStanceChange(c, data[4], data[5]);
+					onStanceChange(new StanceEvent(c, data[4], data[5]));
 				}
 				cache.put(c, data);
 			}
@@ -84,7 +88,7 @@ public abstract class ExScript extends ActiveScript implements
 			if (data[1] != setting) {
 				data[0] = data[1];
 				data[1] = setting;
-				onSettingChange(i, data[0], data[1]);
+				onValueChange(new SettingEvent(i, data[0], data[1]));
 			}
 			cache.put(i, data);
 		}
@@ -143,8 +147,7 @@ public abstract class ExScript extends ActiveScript implements
 	}
 
 	@Override
-	public void onAnimationChange(final Character c, final int prevAnim,
-			final int currAnim) {
+	public void onAnimationChange(final AnimationEvent e) {
 	}
 
 	@Override
@@ -152,8 +155,7 @@ public abstract class ExScript extends ActiveScript implements
 	}
 
 	@Override
-	public void onHealthChange(final Character c, final int prevHealth,
-			final int currHealth) {
+	public void onHealthChange(final HealthEvent e) {
 	}
 
 	@Override
@@ -161,17 +163,15 @@ public abstract class ExScript extends ActiveScript implements
 	}
 
 	@Override
-	public void onSettingChange(final int settingIndex, final int prevValue,
-			final int currValue) {
-	}
-
-	@Override
-	public void onStanceChange(final Character c, final int prevStance,
-			final int currStance) {
+	public void onStanceChange(final StanceEvent e) {
 	}
 
 	@Override
 	public boolean onStart() {
 		return true;
+	}
+
+	@Override
+	public void onValueChange(final SettingEvent e) {
 	}
 }

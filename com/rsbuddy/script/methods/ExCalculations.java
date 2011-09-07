@@ -16,6 +16,9 @@ public class ExCalculations {
 
 	public static class Paint {
 
+		/**
+		 * Used for formatting longs to readable Strings.
+		 */
 		public static enum TimeFormat {
 
 			DIGITAL("0#:0#"),
@@ -29,11 +32,19 @@ public class ExCalculations {
 				this.format = format;
 			}
 
+			/**
+			 * Gets the time format.
+			 * 
+			 * @return The time format as a string.
+			 */
 			public String getFormat() {
 				return format;
 			}
 		}
 
+		/**
+		 * One hour in milliseconds.
+		 */
 		private static final double ONE_HOUR = 3600000D;
 
 		/**

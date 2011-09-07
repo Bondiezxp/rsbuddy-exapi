@@ -65,9 +65,9 @@ public class ExBank {
 		if (bankItems == null || bankItems.length == 0) {
 			throw new IllegalArgumentException();
 		}
-		if (!Bank.isOpen()) {
+		for (int i = 0; !Bank.isOpen() && i < 3; i += 1) {
 			if (Bank.open()) {
-				for (int j = 0; j < 250 && !Bank.isOpen(); j += 1) {
+				for (int j = 0; !Bank.isOpen() && j < 250; j += 1) {
 					Task.sleep(10);
 				}
 			}
@@ -83,109 +83,115 @@ public class ExBank {
 			final int amount = bankItem.getAmount();
 			switch (bankItem.getEvent()) {
 				case DEPOSIT_ALL:
-					Bank.depositAll();
-					for (int i = 0; Inventory.getCount() > 0 && i < 250; i += 1) {
-						Task.sleep(10);
-					}
+					depositAll();
 					break;
 				case DEPOSIT_ALL_EXCEPT:
-					Bank.depositAllExcept(ids);
-					for (int i = 0; Inventory.getCountExcept(ids) > 0
-							&& i < 250; i += 1) {
-						Task.sleep(10);
-					}
+					depositAllExcept(ids);
 					break;
 				case DEPOSIT:
-					if (amount < 0) {
-						break;
-					}
 					for (final int id : ids) {
-						final int startCount = Inventory.getCount(id);
-						final int endCount = startCount - amount;
-						Bank.deposit(id, amount);
-						for (int i = 0; Inventory.getCount(id) != endCount
-								&& i < 250; i += 1) {
-							Task.sleep(10);
-						}
+						deposit(id, amount);
 					}
 					break;
 				case WITHDRAW:
-					if (amount < 0) {
-						break;
-					}
-					Bank.setWithdrawModeToItem();
 					for (final int id : ids) {
-						final int startCount = Inventory.getCount(id);
-						final int endCount = startCount + amount;
-						Bank.withdraw(id, amount);
-						for (int i = 0; Inventory.getCount(id) != endCount
-								&& i < 250; i += 1) {
-							Task.sleep(10);
-						}
+						withdraw(id, amount, false);
 					}
 					break;
 				case WITHDRAW_IF_INVENTORY_DOESNT_CONTAIN:
-					if (amount < 0) {
-						break;
-					}
 					if (Inventory.containsAll(ids)) {
 						break;
 					}
-					Bank.setWithdrawModeToItem();
 					for (final int id : ids) {
 						if (Inventory.contains(id)) {
 							continue;
 						}
-						final int startCount = Inventory.getCount(id);
-						final int endCount = startCount + amount;
-						Bank.withdraw(id, amount);
-						for (int i = 0; Inventory.getCount(id) != endCount
-								&& i < 250; i += 1) {
-							Task.sleep(10);
-						}
+						withdraw(id, amount, false);
 					}
 					break;
 				case WITHDRAW_NOTED:
-					if (amount < 0) {
-						break;
-					}
-					Bank.setWithdrawModeToNote();
 					for (final int id : ids) {
-						final int startCount = Inventory.getCount(id);
-						final int endCount = startCount + amount;
-						Bank.withdraw(id, amount);
-						for (int i = 0; Inventory.getCount(id) != endCount
-								&& i < 250; i += 1) {
-							Task.sleep(10);
-						}
+						withdraw(id, amount, true);
 					}
 					break;
 				case WITHDRAW_NOTED_IF_INVENTORY_DOESNT_CONTAIN:
-					if (amount < 0) {
-						break;
-					}
 					if (Inventory.containsAll(ids)) {
 						break;
 					}
-					Bank.setWithdrawModeToNote();
 					for (final int id : ids) {
 						if (Inventory.contains(id)) {
 							continue;
 						}
-						final int startCount = Inventory.getCount(id);
-						final int endCount = startCount + amount;
-						Bank.withdraw(id, amount);
-						for (int i = 0; Inventory.getCount(id) != endCount
-								&& i < 250; i += 1) {
-							Task.sleep(10);
-						}
+						withdraw(id, amount, true);
 					}
 					break;
 			}
 		}
-		if (Bank.isOpen()) {
+		for (int i = 0; Bank.isOpen() && i < 3; i += 1) {
 			if (Bank.close()) {
-				for (int i = 0; Bank.isOpen() && i < 250; i += 1) {
+				for (int j = 0; Bank.isOpen() && j < 250; j += 1) {
+					Task.sleep(10);
+				}
+			}
+		}
+	}
+
+	private static void deposit(final int id, final int amount) {
+		if (id < 0 || !Inventory.contains(id) || amount == 0) {
+			return;
+		}
+		final int startCount = Inventory.getCount(id);
+		final int endCount = startCount - amount;
+		for (int i = 0; Inventory.getCount(id) != endCount && i < 3; i += 1) {
+			if (Bank.deposit(id, amount)) {
+				for (int j = 0; Inventory.getCount(id) != endCount && j < 250; j += 1) {
+					Task.sleep(10);
+				}
+			}
+		}
+	}
+
+	private static void depositAll() {
+		if (Inventory.getCount() < 1) {
+			return;
+		}
+		for (int i = 0; Inventory.getCount() > 0 && i < 3; i += 1) {
+			if (Bank.depositAll()) {
+				for (int j = 0; Inventory.getCount() > 0 && j < 250; j += 1) {
+					Task.sleep(10);
+				}
+			}
+		}
+	}
+
+	private static void depositAllExcept(final int... ids) {
+		if (Inventory.getCountExcept(ids) < 1) {
+			return;
+		}
+		for (int i = 0; Inventory.getCountExcept(ids) > 0 && i < 3; i += 1) {
+			if (Bank.depositAllExcept(ids)) {
+				for (int j = 0; Inventory.getCountExcept(ids) > 0 && j < 250; j += 1) {
+					Task.sleep(10);
+				}
+			}
+		}
+	}
+
+	private static void withdraw(final int id, final int amount,
+			final boolean noted) {
+		if (id < 0 || Inventory.isFull() || amount < 0) {
+			return;
+		}
+		if (noted) {
+			Bank.setWithdrawModeToNote();
+		} else {
+			Bank.setWithdrawModeToItem();
+		}
+		final int startCount = Inventory.getCount(id);
+		final int endCount = startCount + amount;
+		for (int i = 0; Inventory.getCount(id) != endCount && i < 3; i += 1) {
+			if (Bank.withdraw(id, amount)) {
+				for (int j = 0; Inventory.getCount(id) != endCount && j < 250; j += 1) {
 					Task.sleep(10);
 				}
 			}
