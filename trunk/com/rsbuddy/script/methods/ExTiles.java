@@ -122,7 +122,7 @@ public class ExTiles {
 	 * 
 	 * @return The minimap tiles.
 	 */
-	public static Tile[] getMinimapTiles() {
+	public static Tile[] getMinimap() {
 		final LinkedList<Tile> tiles = new LinkedList<Tile>();
 		for (int x = 0; x < 105; x += 1) {
 			for (int y = 0; y < 105; y += 1) {

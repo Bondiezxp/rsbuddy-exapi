@@ -1,45 +1,32 @@
 package com.rsbuddy.event.listeners;
 
-import com.rsbuddy.script.wrappers.Character;
+import com.rsbuddy.event.events.AnimationEvent;
+import com.rsbuddy.event.events.HealthEvent;
+import com.rsbuddy.event.events.StanceEvent;
 
 public interface CharacterListener {
 
 	/**
 	 * Triggered when a characters' animation changes.
 	 * 
-	 * @param c
-	 *            The character.
-	 * @param prevAnim
-	 *            The previous animation.
-	 * @param currAnim
-	 *            The current animation.
+	 * @param e
+	 *            The animation event which was triggered.
 	 */
-	public void onAnimationChange(final Character c, final int prevAnim,
-			final int currAnim);
+	public abstract void onAnimationChange(final AnimationEvent e);
 
 	/**
 	 * Triggered when a characters' health percentage changes.
 	 * 
-	 * @param c
-	 *            The character.
-	 * @param prevHealth
-	 *            The previous health percentage.
-	 * @param currHealth
-	 *            The current health percentage.
+	 * @param e
+	 *            The health event which was triggered.
 	 */
-	public void onHealthChange(final Character c, final int prevHealth,
-			final int currHealth);
+	public abstract void onHealthChange(final HealthEvent e);
 
 	/**
 	 * Triggered when a characters' stance changes.
 	 * 
-	 * @param c
-	 *            The character.
-	 * @param prevStance
-	 *            The previous stance.
-	 * @param currStance
-	 *            The current stance.
+	 * @param e
+	 *            The stance event which was triggered.
 	 */
-	public void onStanceChange(final Character c, final int prevStance,
-			final int currStance);
+	public abstract void onStanceChange(final StanceEvent e);
 }

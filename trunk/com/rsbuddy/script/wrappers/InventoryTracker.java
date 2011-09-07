@@ -22,16 +22,21 @@ public class InventoryTracker extends LoopTask {
 	}
 
 	/**
-	 * Gets the amount of items (that match the given ids) that have been
-	 * gained.
+	 * Gets the amount of items (that match the given ids) that have been gained
+	 * since this has been started.
 	 * 
 	 * @return The amount of items (that match the given ids) that have been
-	 *         gained.
+	 *         gained since this has been started.
 	 */
 	public int getAmountGained() {
 		return count;
 	}
 
+	/**
+	 * Gets the current item count in the inventory.
+	 * 
+	 * @return The amount of items that match one of the itemIds.
+	 */
 	private int getCount() {
 		int count = 0;
 		final Item[] items = cache ? Inventory.getCachedItems() : Inventory
@@ -57,7 +62,7 @@ public class InventoryTracker extends LoopTask {
 	 *         inventory.
 	 */
 	public int getCurrentAmount() {
-		return lastCount;
+		return lastCount = getCount();
 	}
 
 	@Override

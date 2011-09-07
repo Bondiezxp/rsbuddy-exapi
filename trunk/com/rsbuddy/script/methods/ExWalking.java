@@ -23,7 +23,7 @@ public class ExWalking {
 	 *            The tile to get a closer tile to.
 	 * @return A tile close to the specified tile.
 	 */
-	public static Tile getClosestTile(final Tile tile) {
+	public static Tile getClosest(final Tile tile) {
 		final LocalPath localPath = (LocalPath) Walking.findPath(tile);
 		if (localPath.getNext() == null) {
 			return tile;
@@ -63,7 +63,7 @@ public class ExWalking {
 	 *            The area to get a random tile from.
 	 * @return A random tile in the area.
 	 */
-	public static Tile getRandomTile(final Area area) {
+	public static Tile getRandom(final Area area) {
 		final Tile[] tiles = area.getTileArray();
 		return tiles[Random.nextInt(0, tiles.length)];
 	}
@@ -91,7 +91,7 @@ public class ExWalking {
 	 * @return <tt>true</tt> if the end tile was reached; <tt>false</tt>
 	 *         otherwise.
 	 */
-	public static boolean walkPath(final Tile[] tiles) {
+	public static boolean walk(final Tile[] tiles) {
 		final Tile next = getNext(tiles);
 		if (next == null) {
 			return false;
