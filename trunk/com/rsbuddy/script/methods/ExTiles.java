@@ -3,7 +3,6 @@ package com.rsbuddy.script.methods;
 import com.rsbuddy.script.wrappers.LocalPath;
 import com.rsbuddy.script.wrappers.Tile;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
@@ -12,23 +11,62 @@ import java.util.LinkedList;
 public class ExTiles {
 
 	/**
+	 * Draws the tile(s) on the minimap.
+	 * 
+	 * @param g
+	 *            The graphics.
+	 * @param tiles
+	 *            The tile(s).
+	 */
+	public static void drawOnMap(final Graphics g, final Tile... tiles) {
+		for (final Tile tile : tiles) {
+			if (tile == null || !tile.isOnMap()) {
+				return;
+			}
+			final Point p = tile.toMap();
+			g.drawRect((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
+		}
+	}
+
+	/**
+	 * Draws the tile(s) on the screen.
+	 * 
+	 * @param g
+	 *            The graphics.
+	 * @param tiles
+	 *            The tile(s).
+	 */
+	public static void drawOnScreen(final Graphics g, final Tile... tiles) {
+		for (final Tile tile : tiles) {
+			if (tile == null || !tile.isOnScreen()) {
+				return;
+			}
+			final Point bl = tile.getPoint(0, 0, 0);
+			final Point br = tile.getPoint(1, 0, 0);
+			final Point tr = tile.getPoint(1, 1, 0);
+			final Point tl = tile.getPoint(0, 1, 0);
+			if (!ExCalculations.isPointOnScreen(new Point[] { bl, br, tr, tl })) {
+				return;
+			}
+			g.drawPolygon(new Polygon(new int[] { bl.x, br.x, tr.x, tl.x },
+					new int[] { bl.y, br.y, tr.y, tl.y }, 4));
+		}
+	}
+
+	/**
 	 * Fills the tile(s) on the minimap.
 	 * 
 	 * @param g
 	 *            The graphics.
 	 * @param tiles
 	 *            The tile(s).
-	 * @param c
-	 *            The color to fill the tile.
 	 */
-	public static void fillOnMap(final Graphics g, final Color c,
-			final Tile... tiles) {
+	public static void fillOnMap(final Graphics g, final Tile... tiles) {
 		for (final Tile tile : tiles) {
 			if (tile == null || !tile.isOnMap()) {
 				return;
 			}
 			final Point p = tile.toMap();
-			g.setColor(c);
 			g.fillRect((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
 		}
 	}
@@ -40,11 +78,8 @@ public class ExTiles {
 	 *            The graphics.
 	 * @param tiles
 	 *            The tile(s).
-	 * @param c
-	 *            The color to fill the tile.
 	 */
-	public static void fillOnScreen(final Graphics g, final Color c,
-			final Tile... tiles) {
+	public static void fillOnScreen(final Graphics g, final Tile... tiles) {
 		for (final Tile tile : tiles) {
 			if (tile == null || !tile.isOnScreen()) {
 				return;
@@ -59,10 +94,7 @@ public class ExTiles {
 			final Polygon poly = new Polygon(
 					new int[] { bl.x, br.x, tr.x, tl.x }, new int[] { bl.y,
 							br.y, tr.y, tl.y }, 4);
-			g.setColor(c);
 			g.fillPolygon(poly);
-			g.setColor(Color.BLACK);
-			g.drawPolygon(poly);
 		}
 	}
 

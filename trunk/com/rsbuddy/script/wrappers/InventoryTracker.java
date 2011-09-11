@@ -70,7 +70,7 @@ public class InventoryTracker extends LoopTask {
 		if (!Game.isLoggedIn() || !isActive()) {
 			return 0;
 		}
-		if (lastCount == -1) {
+		if (lastCount < 0) {
 			lastCount = getCount();
 			return 0;
 		} else if (getCount() == 0) {
