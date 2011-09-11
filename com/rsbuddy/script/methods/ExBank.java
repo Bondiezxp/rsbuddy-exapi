@@ -7,51 +7,46 @@ import org.rsbuddy.widgets.Bank;
 
 public class ExBank {
 
-	public static enum BankEvent {
-
-		DEPOSIT_ALL,
-		DEPOSIT_ALL_EXCEPT,
-		DEPOSIT,
-		WITHDRAW,
-		WITHDRAW_IF_INVENTORY_DOESNT_CONTAIN,
-		WITHDRAW_NOTED,
-		WITHDRAW_NOTED_IF_INVENTORY_DOESNT_CONTAIN;
-	}
-
 	public static class BankItem {
 
+		public static final int NOTED = 0x1;
+		public static final int ALL_EXCEPT = 0x2;
+		public static final int ALL = 0x4;
+		public static final int DEPOSIT = 0x8;
+		public static final int WITHDRAW = 0x10;
+
 		private final int amount;
-		private final BankEvent event;
+		private final int options;
 		private final int[] ids;
 
 		/**
 		 * Used for storing data when banking.
 		 * 
-		 * @param event
-		 *            The bank event to do.
+		 * @param options
+		 *            The options to do. Example BankItem.WITHDRAW |
+		 *            BankItem.ALL | BankItem.NOTED.
 		 * @param amount
 		 *            The amount to withdraw/deposit. Use -1 when depositing all
 		 *            or depositing all except.
 		 * @param ids
 		 *            The item ids to bank.
 		 */
-		public BankItem(final BankEvent event, final int amount,
-				final int... ids) {
+		public BankItem(final int options, final int amount, final int... ids) {
 			this.amount = amount;
-			this.event = event;
 			this.ids = ids;
+			this.options = options;
 		}
 
 		public int getAmount() {
 			return amount;
 		}
 
-		public BankEvent getEvent() {
-			return event;
-		}
-
 		public int[] getIds() {
 			return ids;
+		}
+
+		public int getOptions() {
+			return options;
 		}
 	}
 
@@ -81,50 +76,28 @@ public class ExBank {
 				continue;
 			}
 			final int amount = bankItem.getAmount();
-			switch (bankItem.getEvent()) {
-				case DEPOSIT_ALL:
+			final int options = bankItem.getOptions();
+			if ((options & BankItem.WITHDRAW) == BankItem.WITHDRAW) {
+				if ((options & BankItem.NOTED) == BankItem.NOTED) {
+					for (final int id : ids) {
+						withdraw(id, amount, true);
+					}
+				} else {
+					for (final int id : ids) {
+						withdraw(id, amount, false);
+					}
+				}
+			} else if ((options & BankItem.DEPOSIT) == BankItem.DEPOSIT) {
+				if ((options & BankItem.ALL) == BankItem.ALL) {
 					depositAll();
-					break;
-				case DEPOSIT_ALL_EXCEPT:
+				} else if ((options & BankItem.ALL_EXCEPT) == BankItem.ALL_EXCEPT) {
 					depositAllExcept(ids);
-					break;
-				case DEPOSIT:
+				} else {
+					System.out.println("We will deposit this item");
 					for (final int id : ids) {
 						deposit(id, amount);
 					}
-					break;
-				case WITHDRAW:
-					for (final int id : ids) {
-						withdraw(id, amount, false);
-					}
-					break;
-				case WITHDRAW_IF_INVENTORY_DOESNT_CONTAIN:
-					if (Inventory.containsAll(ids)) {
-						break;
-					}
-					for (final int id : ids) {
-						if (Inventory.contains(id)) {
-							continue;
-						}
-						withdraw(id, amount, false);
-					}
-					break;
-				case WITHDRAW_NOTED:
-					for (final int id : ids) {
-						withdraw(id, amount, true);
-					}
-					break;
-				case WITHDRAW_NOTED_IF_INVENTORY_DOESNT_CONTAIN:
-					if (Inventory.containsAll(ids)) {
-						break;
-					}
-					for (final int id : ids) {
-						if (Inventory.contains(id)) {
-							continue;
-						}
-						withdraw(id, amount, true);
-					}
-					break;
+				}
 			}
 		}
 		for (int i = 0; Bank.isOpen() && i < 3; i += 1) {
