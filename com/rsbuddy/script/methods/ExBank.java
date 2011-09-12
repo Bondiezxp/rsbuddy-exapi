@@ -9,11 +9,11 @@ public class ExBank {
 
 	public static class BankItem {
 
-		public static final int NOTED = 0x1;
-		public static final int ALL_EXCEPT = 0x2;
+		public static final int WITHDRAW = 0x1;
+		public static final int DEPOSIT = 0x2;
 		public static final int ALL = 0x4;
-		public static final int DEPOSIT = 0x8;
-		public static final int WITHDRAW = 0x10;
+		public static final int ALL_EXCEPT = 0x8;
+		public static final int NOTED = 0x10;
 
 		private final int amount;
 		private final int options;
