@@ -78,14 +78,9 @@ public class ExBank {
 			final int amount = bankItem.getAmount();
 			final int options = bankItem.getOptions();
 			if ((options & BankItem.WITHDRAW) == BankItem.WITHDRAW) {
-				if ((options & BankItem.NOTED) == BankItem.NOTED) {
-					for (final int id : ids) {
-						withdraw(id, amount, true);
-					}
-				} else {
-					for (final int id : ids) {
-						withdraw(id, amount, false);
-					}
+				for (final int id : ids) {
+					withdraw(id, amount,
+							(options & BankItem.NOTED) == BankItem.NOTED);
 				}
 			} else if ((options & BankItem.DEPOSIT) == BankItem.DEPOSIT) {
 				if ((options & BankItem.ALL) == BankItem.ALL) {
@@ -93,7 +88,6 @@ public class ExBank {
 				} else if ((options & BankItem.ALL_EXCEPT) == BankItem.ALL_EXCEPT) {
 					depositAllExcept(ids);
 				} else {
-					System.out.println("We will deposit this item");
 					for (final int id : ids) {
 						deposit(id, amount);
 					}

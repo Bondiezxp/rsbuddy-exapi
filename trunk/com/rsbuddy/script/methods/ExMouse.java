@@ -1,5 +1,6 @@
 package com.rsbuddy.script.methods;
 
+import com.rsbuddy.script.graphics.Util;
 import com.rsbuddy.script.task.Task;
 import com.rsbuddy.script.util.Random;
 import com.rsbuddy.script.wrappers.GameObject;
@@ -36,7 +37,7 @@ public class ExMouse {
 		}
 
 		public Color getColor(final Color c) {
-			return ExCalculations.Paint
+			return Util
 					.setAlpha(c, toColor(256.0D * ((finishTime - System
 							.currentTimeMillis()) / lastingTime)));
 		}
@@ -58,7 +59,7 @@ public class ExMouse {
 		}
 
 		public Color getColor(final Color c) {
-			return ExCalculations.Paint
+			return Util
 					.setAlpha(c, toColor(256.0D * ((finishTime - System
 							.currentTimeMillis()) / lastingTime)));
 		}

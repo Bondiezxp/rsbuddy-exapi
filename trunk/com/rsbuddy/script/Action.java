@@ -53,9 +53,7 @@ public abstract class Action {
 
 	public abstract void execute();
 
-	public String getStatus() {
-		return "";
-	}
+	public abstract String getStatus();
 
 	public abstract boolean isValid();
 }
