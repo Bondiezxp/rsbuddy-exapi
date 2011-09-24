@@ -1,5 +1,7 @@
 package com.rsbuddy.script.methods;
 
+import com.rsbuddy.script.graphics.Util;
+
 import java.text.DecimalFormat;
 
 public class ExSkills {
@@ -101,7 +103,7 @@ public class ExSkills {
 	public static long getTimeToLevel(final int skill, final int level,
 			final int runTime, final int xpGained) {
 		return getTimeToLevel(skill, level,
-				ExCalculations.Paint.getPerHourValue(runTime, xpGained));
+				Util.getPerHourValue(runTime, xpGained));
 	}
 
 	/**
@@ -135,6 +137,6 @@ public class ExSkills {
 	public static long getTimeToNextLevel(final int skill, final long runTime,
 			final int xpGained) {
 		return getTimeToNextLevel(skill,
-				ExCalculations.Paint.getPerHourValue(runTime, xpGained));
+				Util.getPerHourValue(runTime, xpGained));
 	}
 }
