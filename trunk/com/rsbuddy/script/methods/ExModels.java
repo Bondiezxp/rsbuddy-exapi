@@ -5,6 +5,9 @@ import com.rsbuddy.script.wrappers.Model;
 import java.awt.Graphics;
 import java.awt.Polygon;
 
+/**
+ * @author Ramus
+ */
 public class ExModels {
 
 	/**
@@ -16,8 +19,7 @@ public class ExModels {
 	 *            The model to draw.
 	 */
 	public static void draw(final Graphics g, final Model model) {
-		if (model == null || model.getTriangles() == null
-				|| model.getTriangles().length < 1) {
+		if (model == null || model.getTriangles() == null || model.getTriangles().length < 1) {
 			return;
 		}
 		for (final Polygon p : model.getTriangles()) {
@@ -34,8 +36,7 @@ public class ExModels {
 	 *            The model to fill.
 	 */
 	public static void fill(final Graphics g, final Model model) {
-		if (model == null || model.getTriangles() == null
-				|| model.getTriangles().length < 1) {
+		if (model == null || model.getTriangles() == null || model.getTriangles().length < 1) {
 			return;
 		}
 		for (final Polygon p : model.getTriangles()) {

@@ -1,4 +1,4 @@
-package com.rsbuddy.script.wrappers;
+package com.rsbuddy.script.util;
 
 import com.rsbuddy.script.methods.Environment;
 

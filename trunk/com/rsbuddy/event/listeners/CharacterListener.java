@@ -4,6 +4,9 @@ import com.rsbuddy.event.events.AnimationEvent;
 import com.rsbuddy.event.events.HealthEvent;
 import com.rsbuddy.event.events.StanceEvent;
 
+/**
+ * @author Ramus
+ */
 public interface CharacterListener {
 
 	/**

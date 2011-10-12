@@ -1,10 +1,15 @@
 package com.rsbuddy.script.methods;
 
-import com.rsbuddy.script.task.Task;
+import com.rsbuddy.script.action.Action;
+import com.rsbuddy.script.util.Condition;
 
 import org.rsbuddy.tabs.Inventory;
+import org.rsbuddy.tabs.Summoning;
 import org.rsbuddy.widgets.Bank;
 
+/**
+ * @author Ramus
+ */
 public class ExBank {
 
 	public static class BankItem {
@@ -14,6 +19,8 @@ public class ExBank {
 		public static final int ALL = 0x4;
 		public static final int ALL_EXCEPT = 0x8;
 		public static final int NOTED = 0x10;
+		public static final int ALL_FAMILIAR = 0x20;
+		public static final int ALL_EQUIPPED = 0X40;
 
 		private final int amount;
 		private final int options;
@@ -60,12 +67,8 @@ public class ExBank {
 		if (bankItems == null || bankItems.length == 0) {
 			throw new IllegalArgumentException();
 		}
-		for (int i = 0; !Bank.isOpen() && i < 3; i += 1) {
-			if (Bank.open()) {
-				for (int j = 0; !Bank.isOpen() && j < 250; j += 1) {
-					Task.sleep(10);
-				}
-			}
+		if (!openBank()) {
+			return;
 		}
 		for (final BankItem bankItem : bankItems) {
 			if (bankItem == null) {
@@ -79,14 +82,17 @@ public class ExBank {
 			final int options = bankItem.getOptions();
 			if ((options & BankItem.WITHDRAW) == BankItem.WITHDRAW) {
 				for (final int id : ids) {
-					withdraw(id, amount,
-							(options & BankItem.NOTED) == BankItem.NOTED);
+					withdraw(id, amount, (options & BankItem.NOTED) == BankItem.NOTED);
 				}
 			} else if ((options & BankItem.DEPOSIT) == BankItem.DEPOSIT) {
 				if ((options & BankItem.ALL) == BankItem.ALL) {
 					depositAll();
+				} else if ((options & BankItem.ALL_EQUIPPED) == BankItem.ALL_EQUIPPED) {
+					depositAllEquipped();
 				} else if ((options & BankItem.ALL_EXCEPT) == BankItem.ALL_EXCEPT) {
 					depositAllExcept(ids);
+				} else if ((options & BankItem.ALL_FAMILIAR) == BankItem.ALL_FAMILIAR) {
+					depositAllFamiliar();
 				} else {
 					for (final int id : ids) {
 						deposit(id, amount);
@@ -94,13 +100,22 @@ public class ExBank {
 				}
 			}
 		}
+		closeBank();
+	}
+
+	private static boolean closeBank() {
 		for (int i = 0; Bank.isOpen() && i < 3; i += 1) {
 			if (Bank.close()) {
-				for (int j = 0; Bank.isOpen() && j < 250; j += 1) {
-					Task.sleep(10);
-				}
+				Action.sleep(2500, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return !Bank.isOpen();
+					}
+				});
 			}
 		}
+		return !Bank.isOpen();
 	}
 
 	private static void deposit(final int id, final int amount) {
@@ -111,9 +126,13 @@ public class ExBank {
 		final int endCount = startCount - amount;
 		for (int i = 0; Inventory.getCount(id) != endCount && i < 3; i += 1) {
 			if (Bank.deposit(id, amount)) {
-				for (int j = 0; Inventory.getCount(id) != endCount && j < 250; j += 1) {
-					Task.sleep(10);
-				}
+				Action.sleep(2500, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return Inventory.getCount(id) == endCount;
+					}
+				});
 			}
 		}
 	}
@@ -124,9 +143,30 @@ public class ExBank {
 		}
 		for (int i = 0; Inventory.getCount() > 0 && i < 3; i += 1) {
 			if (Bank.depositAll()) {
-				for (int j = 0; Inventory.getCount() > 0 && j < 250; j += 1) {
-					Task.sleep(10);
-				}
+				Action.sleep(2500, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return Inventory.getCount() == 0;
+					}
+				});
+			}
+		}
+	}
+
+	private static void depositAllEquipped() {
+		if (Players.getLocal().getEquipment().length == 0) {
+			return;
+		}
+		for (int i = 0; Players.getLocal().getEquipment().length > 0 && i < 3; i += 1) {
+			if (Bank.depositAllEquipped()) {
+				Action.sleep(2500, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return Players.getLocal().getEquipment().length == 0;
+					}
+				});
 			}
 		}
 	}
@@ -137,15 +177,40 @@ public class ExBank {
 		}
 		for (int i = 0; Inventory.getCountExcept(ids) > 0 && i < 3; i += 1) {
 			if (Bank.depositAllExcept(ids)) {
-				for (int j = 0; Inventory.getCountExcept(ids) > 0 && j < 250; j += 1) {
-					Task.sleep(10);
-				}
+				Action.sleep(2500, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return Inventory.getCountExcept(ids) == 0;
+					}
+				});
 			}
 		}
 	}
 
-	private static void withdraw(final int id, final int amount,
-			final boolean noted) {
+	private static void depositAllFamiliar() {
+		if (!Summoning.isFamiliarSummoned() || Summoning.getSummonedFamiliar().canStore()) {
+			return;
+		}
+		Bank.depositAllFamiliar();
+	}
+
+	private static boolean openBank() {
+		for (int i = 0; !Bank.isOpen() && i < 3; i += 1) {
+			if (Bank.open()) {
+				Action.sleep(2500, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return Bank.isOpen();
+					}
+				});
+			}
+		}
+		return Bank.isOpen();
+	}
+
+	private static void withdraw(final int id, final int amount, final boolean noted) {
 		if (id < 0 || Inventory.isFull() || amount < 0) {
 			return;
 		}
@@ -158,9 +223,13 @@ public class ExBank {
 		final int endCount = startCount + amount;
 		for (int i = 0; Inventory.getCount(id) != endCount && i < 3; i += 1) {
 			if (Bank.withdraw(id, amount)) {
-				for (int j = 0; Inventory.getCount(id) != endCount && j < 250; j += 1) {
-					Task.sleep(10);
-				}
+				Action.sleep(2500, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return Inventory.getCount(id) == endCount;
+					}
+				});
 			}
 		}
 	}

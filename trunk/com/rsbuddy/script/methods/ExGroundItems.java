@@ -7,6 +7,9 @@ import com.rsbuddy.script.wrappers.GroundItem;
 import java.awt.Point;
 import java.awt.Polygon;
 
+/**
+ * @author Ramus
+ */
 public class ExGroundItems {
 
 	/**
@@ -40,12 +43,10 @@ public class ExGroundItems {
 			if (go == null || go.getModel() == null || go.getLocation() == null) {
 				continue;
 			}
-			if (!ExCalculations.isPointOnScreen(go.getLocation()
-					.getCenterPoint())) {
+			if (!ExCalculations.isPointOnScreen(go.getLocation().getCenterPoint())) {
 				continue;
 			}
-			if (go.getType() != Type.BOUNDARY
-					|| go.getType() != GameObject.Type.BOUNDARY) {
+			if (go.getType() != Type.BOUNDARY || go.getType() != GameObject.Type.BOUNDARY) {
 				continue;
 			}
 			for (final Polygon p1 : go.getModel().getTriangles()) {
@@ -67,13 +68,11 @@ public class ExGroundItems {
 	 *         otherwise.
 	 */
 	public static boolean isValid(final GroundItem item) {
-		if (item == null || item.getItem() == null
-				|| item.getItem().getId() == -1 || item.getLocation() == null) {
+		if (item == null || item.getItem() == null || item.getItem().getId() == -1 || item.getLocation() == null) {
 			return false;
 		}
 		for (final GroundItem gi : GroundItems.getAllAt(item.getLocation())) {
-			if (gi == null || gi.getItem() == null
-					|| gi.getItem().getId() == -1 || gi.getLocation() == null) {
+			if (gi == null || gi.getItem() == null || gi.getItem().getId() == -1 || gi.getLocation() == null) {
 				return false;
 			}
 			if (gi.getItem().getId() == item.getItem().getId()) {

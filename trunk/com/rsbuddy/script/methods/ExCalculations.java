@@ -9,6 +9,9 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.util.LinkedList;
 
+/**
+ * @author Ramus
+ */
 public class ExCalculations {
 
 	/**
@@ -49,8 +52,7 @@ public class ExCalculations {
 	 * @return A random point in the model.
 	 */
 	public static Point getRandomPoint(final Model model) {
-		if (model == null || model.getTriangles() == null
-				|| model.getTriangles().length < 1) {
+		if (model == null || model.getTriangles() == null || model.getTriangles().length < 1) {
 			return null;
 		}
 		final Polygon[] triangles = model.getTriangles();
@@ -72,9 +74,8 @@ public class ExCalculations {
 			b = 1 - b;
 		}
 		final double c = 1 - a - b;
-		return new Point((int) (a * p.xpoints[0] + b * p.xpoints[1] + c
-				* p.xpoints[2]), (int) (a * p.ypoints[0] + b * p.ypoints[1] + c
-				* p.ypoints[2]));
+		return new Point((int) (a * p.xpoints[0] + b * p.xpoints[1] + c * p.xpoints[2]), (int) (a * p.ypoints[0] + b
+				* p.ypoints[1] + c * p.ypoints[2]));
 	}
 
 	/**
@@ -85,8 +86,8 @@ public class ExCalculations {
 	 * @return A random point in the rectangle.
 	 */
 	public static Point getRandomPoint(final Rectangle rect) {
-		return new Point(Random.nextInt(rect.x, rect.x + rect.width + 1),
-				Random.nextInt(rect.y, rect.y + rect.height + 1));
+		return new Point(Random.nextInt(rect.x, rect.x + rect.width + 1), Random.nextInt(rect.y, rect.y + rect.height
+				+ 1));
 	}
 
 	/**
@@ -101,8 +102,7 @@ public class ExCalculations {
 		final Point br = tile.getPoint(1, 0, 0);
 		final Point tr = tile.getPoint(1, 1, 0);
 		final Point tl = tile.getPoint(0, 1, 0);
-		return getRandomPoint(new Polygon(new int[] { bl.x, br.x, tr.x, tl.x },
-				new int[] { bl.y, br.y, tr.y, tl.y }, 4));
+		return getRandomPoint(new Polygon(new int[] { bl.x, br.x, tr.x, tl.x }, new int[] { bl.y, br.y, tr.y, tl.y }, 4));
 	}
 
 	/**
@@ -114,9 +114,8 @@ public class ExCalculations {
 	 */
 	public static boolean isPointOnScreen(final Point... points) {
 		for (final Point point : points) {
-			if (point == null || point.x > Game.getCanvasSize().width
-					|| point.y > Game.getCanvasSize().height || point.x < 0
-					|| point.y < 0 || !Calculations.isPointOnScreen(point)) {
+			if (point == null || point.x > Game.getCanvasSize().width || point.y > Game.getCanvasSize().height
+					|| point.x < 0 || point.y < 0 || !Calculations.isPointOnScreen(point)) {
 				return false;
 			}
 		}

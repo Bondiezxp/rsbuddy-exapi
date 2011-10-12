@@ -2,14 +2,16 @@ package com.rsbuddy.event.events;
 
 import com.rsbuddy.script.wrappers.Character;
 
+/**
+ * @author Ramus
+ */
 public class AnimationEvent {
 
 	private final Character character;
 	private final int previousAnimation;
 	private final int currentAnimation;
 
-	public AnimationEvent(final Character character,
-			final int previousAnimation, final int currentAnimation) {
+	public AnimationEvent(final Character character, final int previousAnimation, final int currentAnimation) {
 		this.character = character;
 		this.previousAnimation = previousAnimation;
 		this.currentAnimation = currentAnimation;

@@ -3,6 +3,9 @@ package com.rsbuddy.script.graphics;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+/**
+ * @author Ramus
+ */
 public class Format {
 
 	/**
@@ -71,31 +74,22 @@ public class Format {
 		if (!seconds.equals("1")) {
 			formatted = formatted.replaceFirst("Second", "Seconds");
 		}
-		formatted = formatted.replaceFirst("0#", ""
-				+ (hours.length() > 1 ? String.valueOf(hours) : "0" + hours));
-		formatted = formatted.replaceFirst("0#", ""
-				+ (minutes.length() > 1 ? String.valueOf(minutes) : "0"
-						+ minutes));
-		formatted = formatted.replaceFirst("0#", ""
-				+ (seconds.length() > 1 ? String.valueOf(seconds) : "0"
-						+ seconds));
+		formatted = formatted.replaceFirst("0#", "" + (hours.length() > 1 ? String.valueOf(hours) : "0" + hours));
+		formatted = formatted.replaceFirst("0#", "" + (minutes.length() > 1 ? String.valueOf(minutes) : "0" + minutes));
+		formatted = formatted.replaceFirst("0#", "" + (seconds.length() > 1 ? String.valueOf(seconds) : "0" + seconds));
 		formatted = formatted.replaceFirst("#", "" + hours);
 		formatted = formatted.replaceFirst("#", "" + minutes);
 		formatted = formatted.replaceFirst("#", "" + seconds);
 		if (hours.equals("0")) {
-			formatted = formatted.substring(formatted.indexOf("Hour")
-					+ (formatted.contains("Hours") ? 6 : 5));
+			formatted = formatted.substring(formatted.indexOf("Hour") + (formatted.contains("Hours") ? 6 : 5));
 		}
 		if (minutes.equals("0")) {
-			formatted = formatted.substring(formatted.indexOf("Minute")
-					+ (formatted.contains("Minutes") ? 8 : 7));
+			formatted = formatted.substring(formatted.indexOf("Minute") + (formatted.contains("Minutes") ? 8 : 7));
 		}
 		if (seconds.equals("0")) {
-			formatted = formatted.substring(formatted.indexOf("Second")
-					+ (formatted.contains("Seconds") ? 8 : 7));
+			formatted = formatted.substring(formatted.indexOf("Second") + (formatted.contains("Seconds") ? 8 : 7));
 		}
-		if (formatted.replaceAll(" ", "").isEmpty()
-				|| formatted.replace(" ", "").equals("")) {
+		if (formatted.replaceAll(" ", "").isEmpty() || formatted.replace(" ", "").equals("")) {
 			return "";
 		}
 		return formatted;
@@ -124,7 +118,6 @@ public class Format {
 		}
 		final int in = (str.length() - topsize) / 3;
 		final char end = in == 1 ? 'k' : in == 2 ? 'm' : in == 3 ? 'b' : ' ';
-		return topstr += (dec != ' ' && dec != '0' ? "." + dec : "")
-				+ (end != ' ' ? end : "");
+		return topstr += (dec != ' ' && dec != '0' ? "." + dec : "") + (end != ' ' ? end : "");
 	}
 }

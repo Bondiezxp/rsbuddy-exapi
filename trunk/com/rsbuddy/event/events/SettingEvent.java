@@ -1,13 +1,15 @@
 package com.rsbuddy.event.events;
 
+/**
+ * @author Ramus
+ */
 public class SettingEvent {
 
 	private final int settingIndex;
 	private final int previousValue;
 	private final int currentValue;
 
-	public SettingEvent(final int settingIndex, final int previousValue,
-			final int currentValue) {
+	public SettingEvent(final int settingIndex, final int previousValue, final int currentValue) {
 		this.settingIndex = settingIndex;
 		this.previousValue = previousValue;
 		this.currentValue = currentValue;

@@ -8,14 +8,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.LinkedHashMap;
 
+/**
+ * @author Ramus
+ * @author b0xb0x
+ */
 public class Graph {
 
-	public static final Font DEFAULT_SCALE_FONT = new Font("Tahoma",
-			Font.PLAIN, 9);
-	public static final Font DEFAULT_LABEL_FONT = new Font("Tahoma",
-			Font.PLAIN, 10);
-	public static final Font DEFAULT_TITLE_FONT = new Font("Tahoma", Font.BOLD,
-			11);
+	public static final Font DEFAULT_SCALE_FONT = new Font("Tahoma", Font.PLAIN, 9);
+	public static final Font DEFAULT_LABEL_FONT = new Font("Tahoma", Font.PLAIN, 10);
+	public static final Font DEFAULT_TITLE_FONT = new Font("Tahoma", Font.BOLD, 11);
 	private final LinkedHashMap<Integer, Integer> yPoints = new LinkedHashMap<Integer, Integer>();
 	private int yMin = -1;
 	private int yMax = -1;
@@ -39,18 +40,15 @@ public class Graph {
 	private final String yLabel;
 	private final String title;
 
-	public Graph(final int x, final int y, final int width, final int height,
-			final Color axis, final Color grid, final Color points) {
-		this(x, y, width, height, 10, axis, grid, points, Color.BLACK,
-				Color.BLACK, Color.BLACK, DEFAULT_LABEL_FONT,
+	public Graph(final int x, final int y, final int width, final int height, final Color axis, final Color grid,
+			final Color points) {
+		this(x, y, width, height, 10, axis, grid, points, Color.BLACK, Color.BLACK, Color.BLACK, DEFAULT_LABEL_FONT,
 				DEFAULT_TITLE_FONT, DEFAULT_SCALE_FONT, "", "", "");
 	}
 
-	public Graph(final int x, final int y, final int width, final int height,
-			final int interval, final Color axis, final Color grid,
-			final Color points, final Color labels, final Color titleColor,
-			final Color scales, final Font labelFont, final Font titleFont,
-			final Font scaleFont, final String xLabel, final String yLabel,
+	public Graph(final int x, final int y, final int width, final int height, final int interval, final Color axis,
+			final Color grid, final Color points, final Color labels, final Color titleColor, final Color scales,
+			final Font labelFont, final Font titleFont, final Font scaleFont, final String xLabel, final String yLabel,
 			final String title) {
 		this.x = x;
 		this.y = y;
@@ -91,16 +89,13 @@ public class Graph {
 		g.setColor(grid);
 		final double xplot = x + width;
 		final double yplot = y + height;
-		for (int i = 0; i < (xplot / interval); i += 1) {
-			g.drawLine(x,
-					Math.max(x, (int) (i * (yplot / (xplot / interval)))),
-					(int) xplot,
+		for (int i = 0; i < xplot / interval; i += 1) {
+			g.drawLine(x, Math.max(x, (int) (i * (yplot / (xplot / interval)))), (int) xplot,
 					Math.max(x, (int) (i * (yplot / (xplot / interval)))));
 		}
-		for (int i = 0; i < (yplot / interval); i += 1) {
-			g.drawLine(Math.max(y, (int) (i * (xplot / (yplot / interval)))),
-					x, Math.max(y, (int) (i * (xplot / (yplot / interval)))),
-					(int) yplot);
+		for (int i = 0; i < yplot / interval; i += 1) {
+			g.drawLine(Math.max(y, (int) (i * (xplot / (yplot / interval)))), x,
+					Math.max(y, (int) (i * (xplot / (yplot / interval)))), (int) yplot);
 		}
 		g.drawLine(width, y, width, height);
 	}
@@ -111,8 +106,7 @@ public class Graph {
 		final FontMetrics fm = g.getFontMetrics(labelFont);
 		final int w1 = fm.stringWidth(xLabel);
 		final int w2 = fm.stringWidth(yLabel);
-		g.drawString(xLabel, x + width / 2 - w1 / 2,
-				y + height + labelFont.getSize());
+		g.drawString(xLabel, x + width / 2 - w1 / 2, y + height + labelFont.getSize());
 		final Graphics2D g2 = (Graphics2D) g;
 		g2.rotate(3 * Math.PI / 2, x, y + height);
 		g2.drawString(yLabel, y + height / 2 - w2 / 2, y + height - 5);
@@ -132,16 +126,15 @@ public class Graph {
 			}
 			int ytmp = y;
 			ytmp -= this.y;
-			double yP = Math.abs(height * ((double) ytmp / (double) yMax)
-					- height);
+			double yP = Math.abs(height * ((double) ytmp / (double) yMax) - height);
 			yP += this.y;
-			final Point p = new Point(Math.min(x + width, Math.max(x, (int) (x
-					+ width + offset - (System.currentTimeMillis() - startTime)
-					/ (double) (x + width * interval)))), (int) yP);
-			offset += (width / (interval * 2));
+			final Point p = new Point(Math.min(
+					x + width,
+					Math.max(x, (int) (x + width + offset - (System.currentTimeMillis() - startTime)
+							/ (double) (x + width * interval)))), (int) yP);
+			offset += width / (interval * 2);
 			if (prev != null) {
-				if (prev.x <= width + x && p.x <= width + x && prev.x >= x
-						&& p.x >= x) {
+				if (prev.x <= width + x && p.x <= width + x && prev.x >= x && p.x >= x) {
 					g.drawLine(prev.x, prev.y, p.x, p.y);
 				}
 			}

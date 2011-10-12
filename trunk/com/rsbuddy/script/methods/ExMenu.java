@@ -1,10 +1,15 @@
 package com.rsbuddy.script.methods;
 
+import com.rsbuddy.script.action.Action;
 import com.rsbuddy.script.task.Task;
+import com.rsbuddy.script.util.Condition;
 import com.rsbuddy.script.util.Random;
 
 import java.awt.Point;
 
+/**
+ * @author Ramus
+ */
 public class ExMenu {
 
 	/**
@@ -33,7 +38,13 @@ public class ExMenu {
 	public static boolean hoverAction(final String action, final int time) {
 		if (!Menu.isOpen()) {
 			Mouse.click(false);
-			Task.sleep(300, 500);
+			Action.sleep(500, new Condition() {
+
+				@Override
+				public boolean isValid() {
+					return Menu.isOpen();
+				}
+			});
 		}
 		if (!Menu.isOpen() || !Menu.contains(action)) {
 			return false;

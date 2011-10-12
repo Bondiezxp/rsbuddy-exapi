@@ -1,6 +1,8 @@
 package com.rsbuddy.script.methods;
 
+import com.rsbuddy.script.action.Action;
 import com.rsbuddy.script.task.Task;
+import com.rsbuddy.script.util.Condition;
 import com.rsbuddy.script.wrappers.Component;
 import com.rsbuddy.script.wrappers.Item;
 import com.rsbuddy.script.wrappers.Player;
@@ -8,6 +10,9 @@ import com.rsbuddy.script.wrappers.Widget;
 
 import org.rsbuddy.tabs.Inventory;
 
+/**
+ * @author Ramus
+ */
 public class ExTrading {
 
 	public static class AcceptBox {
@@ -33,14 +38,11 @@ public class ExTrading {
 			if (!isOpen()) {
 				return false;
 			}
-			if (getWidget().getComponent(WIDGET_TRADE_ACCEPTED).containsText(
-					"Waiting for other")) {
-				Task.sleep(100, 200);
+			if (getWidget().getComponent(WIDGET_TRADE_ACCEPTED).containsText("Waiting for other")) {
+				Task.sleep(250);
 				return true;
 			} else {
-				final Component button = getWidget().getComponent(
-						WIDGET_TRADE_BUTTON_ACCEPT);
-				Mouse.moveRandomly(100, 150);
+				final Component button = getWidget().getComponent(WIDGET_TRADE_BUTTON_ACCEPT);
 				return button != null && button.click();
 			}
 		}
@@ -49,9 +51,7 @@ public class ExTrading {
 			if (!isOpen()) {
 				return false;
 			}
-			final Component button = getWidget().getComponent(
-					WIDGET_TRADE_BUTTON_CLOSE);
-			Mouse.moveRandomly(100, 150);
+			final Component button = getWidget().getComponent(WIDGET_TRADE_BUTTON_CLOSE);
 			return button != null && button.click();
 		}
 
@@ -59,9 +59,7 @@ public class ExTrading {
 			if (isOpen()) {
 				return false;
 			}
-			final Component button = getWidget().getComponent(
-					WIDGET_TRADE_BUTTON_DECLINE);
-			Mouse.moveRandomly(100, 150);
+			final Component button = getWidget().getComponent(WIDGET_TRADE_BUTTON_DECLINE);
 			return button != null && button.click();
 		}
 
@@ -92,8 +90,7 @@ public class ExTrading {
 				if (!isOpen()) {
 					return null;
 				}
-				return getWidget().getComponent(WIDGET_TRADE_TRADER).getText()
-						.replace("Trading With: ", "");
+				return getWidget().getComponent(WIDGET_TRADE_TRADER).getText().replace("Trading With: ", "");
 			}
 		}
 
@@ -109,14 +106,11 @@ public class ExTrading {
 			if (!isOpen()) {
 				return false;
 			}
-			if (getWidget().getComponent(WIDGET_TRADE_ACCEPTED).containsText(
-					"Waiting for other")) {
-				Task.sleep(100, 200);
+			if (getWidget().getComponent(WIDGET_TRADE_ACCEPTED).containsText("Waiting for other")) {
+				Task.sleep(250);
 				return true;
 			} else {
-				final Component button = getWidget().getComponent(
-						WIDGET_TRADE_BUTTON_ACCEPT);
-				Mouse.moveRandomly(100, 150);
+				final Component button = getWidget().getComponent(WIDGET_TRADE_BUTTON_ACCEPT);
 				return button != null && button.click();
 			}
 		}
@@ -125,9 +119,7 @@ public class ExTrading {
 			if (!isOpen()) {
 				return false;
 			}
-			final Component button = getWidget().getComponent(
-					WIDGET_TRADE_BUTTON_CLOSE);
-			Mouse.moveRandomly(100, 150);
+			final Component button = getWidget().getComponent(WIDGET_TRADE_BUTTON_CLOSE);
 			return button != null && button.click();
 		}
 
@@ -135,19 +127,16 @@ public class ExTrading {
 			if (!isOpen()) {
 				return false;
 			}
-			final Component button = getWidget().getComponent(
-					WIDGET_TRADE_BUTTON_DECLINE);
-			Mouse.moveRandomly(100, 150);
+			final Component button = getWidget().getComponent(WIDGET_TRADE_BUTTON_DECLINE);
 			return button != null && button.click();
 		}
 
 		public static boolean getItemsTraded() {
 			int i = 1;
 			while (i < 3) {
-				if (getWidget().getComponent(WIDGET_TRADE_SLOTS[0])
-						.getComponent(WIDGET_TRADE_SLOTS[i]).getItemId() > 0) {
-					items[i] = getWidget().getComponent(WIDGET_TRADE_SLOTS[0])
-							.getComponent(WIDGET_TRADE_SLOTS[i]).getItemId();
+				if (getWidget().getComponent(WIDGET_TRADE_SLOTS[0]).getComponent(WIDGET_TRADE_SLOTS[i]).getItemId() > 0) {
+					items[i] = getWidget().getComponent(WIDGET_TRADE_SLOTS[0]).getComponent(WIDGET_TRADE_SLOTS[i])
+							.getItemId();
 				}
 				i += 1;
 			}
@@ -172,15 +161,26 @@ public class ExTrading {
 			final int i = Inventory.getCount(true, item);
 			if (count == 0 && i > 0) {
 				inv.interact("Offer-All");
-				Mouse.moveRandomly(100, 150);
-				Task.sleep(800, 1000);
+				Action.sleep(1000, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return Inventory.getCount(item) == 0;
+					}
+				});
 				return true;
 			} else if (i >= count) {
 				inv.interact("Offer-X");
+				Action.sleep(1000, new Condition() {
+
+					@Override
+					public boolean isValid() {
+						return Inventory.getCount(item) == i - count;
+					}
+				});
 			}
 			return false;
 		}
-
 	}
 
 	public enum TransactionScreen {
@@ -203,7 +203,6 @@ public class ExTrading {
 	public static void tradeWith(final String name) {
 		final Player t = Players.getNearest(name);
 		if (t != null && t.interact("Trade with " + name)) {
-			Mouse.moveRandomly(100, 150);
 			Task.sleep(3000, 3500);
 			return;
 		}

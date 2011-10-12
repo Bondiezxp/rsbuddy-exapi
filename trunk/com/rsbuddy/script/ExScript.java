@@ -24,9 +24,26 @@ import java.awt.event.MouseMotionListener;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-public abstract class ExScript extends ActiveScript implements
-		CharacterListener, KeyListener, MessageListener, MouseListener,
-		MouseMotionListener, PaintListener, SettingListener {
+/**
+ * @author Ramus
+ */
+public abstract class ExScript extends ActiveScript implements CharacterListener, KeyListener, MessageListener,
+		MouseListener, MouseMotionListener, PaintListener, SettingListener {
+
+	/**
+	 * Sleeps until condition is true or until the timeout is reached
+	 * 
+	 * @param timeout
+	 *            The time to sleep for if the condition is always false.
+	 * @param condition
+	 *            The conditon to sleep for.
+	 */
+	public static final void sleep(final int timeout, final boolean condition) {
+		final int threshold = 10;
+		for (int i = 0; !condition && i < timeout / 10; i += 1) {
+			sleep(threshold);
+		}
+	}
 
 	private final LinkedHashMap<Object, Integer[]> cache = new LinkedHashMap<Object, Integer[]>();
 
@@ -94,8 +111,6 @@ public abstract class ExScript extends ActiveScript implements
 		}
 	}
 
-	public abstract int doLoop();
-
 	@Override
 	public void keyPressed(final KeyEvent e) {
 	}
@@ -111,7 +126,7 @@ public abstract class ExScript extends ActiveScript implements
 	@Override
 	public final int loop() {
 		check();
-		return doLoop();
+		return onLoop();
 	}
 
 	@Override
@@ -157,6 +172,8 @@ public abstract class ExScript extends ActiveScript implements
 	@Override
 	public void onHealthChange(final HealthEvent e) {
 	}
+
+	public abstract int onLoop();
 
 	@Override
 	public void onRepaint(final Graphics g) {

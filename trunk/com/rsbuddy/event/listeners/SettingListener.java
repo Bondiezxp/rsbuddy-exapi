@@ -2,6 +2,9 @@ package com.rsbuddy.event.listeners;
 
 import com.rsbuddy.event.events.SettingEvent;
 
+/**
+ * @author Ramus
+ */
 public interface SettingListener {
 
 	/**

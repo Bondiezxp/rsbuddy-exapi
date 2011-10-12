@@ -15,6 +15,9 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.util.LinkedList;
 
+/**
+ * @author Ramus
+ */
 public class ExMouse {
 
 	private static class MouseClickPoint extends Point {
@@ -37,9 +40,7 @@ public class ExMouse {
 		}
 
 		public Color getColor(final Color c) {
-			return Util
-					.setAlpha(c, toColor(256.0D * ((finishTime - System
-							.currentTimeMillis()) / lastingTime)));
+			return Util.setAlpha(c, toColor(256.0D * ((finishTime - System.currentTimeMillis()) / lastingTime)));
 		}
 
 		public boolean isUp() {
@@ -59,9 +60,7 @@ public class ExMouse {
 		}
 
 		public Color getColor(final Color c) {
-			return Util
-					.setAlpha(c, toColor(256.0D * ((finishTime - System
-							.currentTimeMillis()) / lastingTime)));
+			return Util.setAlpha(c, toColor(256.0D * ((finishTime - System.currentTimeMillis()) / lastingTime)));
 		}
 
 		public boolean isUp() {
@@ -86,32 +85,26 @@ public class ExMouse {
 	 * @param mouseClicks
 	 *            The color of the mouse clicks.
 	 */
-	public static void drawMouse(final Graphics2D g1, final Color inner,
-			final Color outer, final Color mouseTrail, final Color mouseClicks) {
+	public static void drawMouse(final Graphics2D g1, final Color inner, final Color outer, final Color mouseTrail,
+			final Color mouseClicks) {
 		final Point point = Mouse.getLocation();
 		final int x = point.x;
 		final int y = point.y;
 		final Graphics2D gr = (Graphics2D) g1.create();
-		gr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		gr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		gr.rotate(Math.toRadians(getRotation(5)), x, y);
 		gr.setColor(inner);
 		gr.drawRect(x - 4, y - 4, 8, 8);
 		final Graphics2D grr = (Graphics2D) g1.create();
-		grr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		grr.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		grr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		grr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		grr.rotate(Math.toRadians(getRotation(-5)), x, y);
 		grr.setColor(outer);
 		grr.drawRect(x - 8, y - 8, 16, 16);
 		final Graphics2D g = (Graphics2D) g1.create();
-		gr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		gr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		while (!MOUSE_PATH.isEmpty() && MOUSE_PATH.peek().isUp()) {
 			MOUSE_PATH.remove();
 		}
@@ -121,12 +114,10 @@ public class ExMouse {
 		}
 		MousePathPoint lastPoint = null;
 		for (final MousePathPoint p : MOUSE_PATH) {
-			if (p.x < 0 || p.y < 0 || p.x > Game.getCanvasSize().width
-					|| p.y > Game.getCanvasSize().width) {
+			if (p.x < 0 || p.y < 0 || p.x > Game.getCanvasSize().width || p.y > Game.getCanvasSize().width) {
 				MOUSE_PATH.remove(p);
 			}
-			if (lastPoint != null && lastPoint.x > 0 && lastPoint.y > 0
-					&& lastPoint.x < Game.getCanvasSize().width
+			if (lastPoint != null && lastPoint.x > 0 && lastPoint.y > 0 && lastPoint.x < Game.getCanvasSize().width
 					&& lastPoint.y < Game.getCanvasSize().height) {
 				g.setColor(p.getColor(mouseTrail));
 				g.drawLine(p.x, p.y, lastPoint.x, lastPoint.y);
@@ -139,8 +130,7 @@ public class ExMouse {
 		final long clickTime = Mouse.getPressTime();
 		final Point lastClickPos = Mouse.getPressLocation();
 		if (MOUSE_CLICKS.isEmpty() || !MOUSE_CLICKS.getLast().equals(clickTime)) {
-			MOUSE_CLICKS.add(new MouseClickPoint(lastClickPos.x,
-					lastClickPos.y, clickTime));
+			MOUSE_CLICKS.add(new MouseClickPoint(lastClickPos.x, lastClickPos.y, clickTime));
 		}
 		for (final MouseClickPoint c : MOUSE_CLICKS) {
 			g.setColor(c.getColor(mouseClicks));
@@ -161,8 +151,7 @@ public class ExMouse {
 	 *            The maximum distance the cursor will move (exclusive)
 	 * @return A random point between minDistance and maxDistance.
 	 */
-	private static Point generateRandomPoint(final int minDistance,
-			final int maxDistance) {
+	private static Point generateRandomPoint(final int minDistance, final int maxDistance) {
 		double xvec = Math.random();
 		if (Random.nextInt(0, 2) == 1) {
 			xvec = -xvec;
@@ -174,19 +163,14 @@ public class ExMouse {
 		double distance = maxDistance;
 		final Point p = Mouse.getLocation();
 		final int maxX = (int) Math.round(xvec * distance + p.x);
-		distance -= Math.abs((maxX - Math.max(0,
-				Math.min(Game.getCanvasSize().getWidth(), maxX)))
-				/ xvec);
+		distance -= Math.abs((maxX - Math.max(0, Math.min(Game.getCanvasSize().getWidth(), maxX))) / xvec);
 		final int maxY = (int) Math.round(yvec * distance + p.y);
-		distance -= Math.abs((maxY - Math.max(0,
-				Math.min(Game.getCanvasSize().getHeight(), maxY)))
-				/ yvec);
+		distance -= Math.abs((maxY - Math.max(0, Math.min(Game.getCanvasSize().getHeight(), maxY))) / yvec);
 		if (distance < minDistance) {
 			return generateRandomPoint(maxDistance, minDistance);
 		}
 		distance = Random.nextInt(minDistance, (int) distance);
-		return new Point((int) (xvec * distance) + p.x, (int) (yvec * distance)
-				+ p.y);
+		return new Point((int) (xvec * distance) + p.x, (int) (yvec * distance) + p.y);
 	}
 
 	/**
@@ -243,7 +227,7 @@ public class ExMouse {
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 10 && model != null
+		for (int i = 0; i < 20 && model != null && (model.contains(p) || !Menu.contains(action))
 				&& ExCalculations.isPointOnScreen(p); i += 1) {
 			p = ExCalculations.getRandomPoint(model);
 			if (!ExCalculations.isPointOnScreen(p)) {
@@ -257,12 +241,11 @@ public class ExMouse {
 				Mouse.setSpeed(speed);
 				return true;
 			}
-			if (Menu.contains(action)) {
-				Mouse.setSpeed(speed);
-				return ExMenu.hoverAction(action);
-			}
 		}
 		Mouse.setSpeed(speed);
+		if (Menu.contains(action)) {
+			return ExMenu.hoverAction(action);
+		}
 		return false;
 	}
 
@@ -285,7 +268,7 @@ public class ExMouse {
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 10 && tile != null && tile.isOnScreen(); i += 1) {
+		for (int i = 0; i < 20 && !Menu.contains(action) && tile != null && tile.isOnScreen(); i += 1) {
 			p = ExCalculations.getRandomPoint(tile);
 			if (!ExCalculations.isPointOnScreen(p)) {
 				return false;
@@ -298,12 +281,11 @@ public class ExMouse {
 				Mouse.setSpeed(speed);
 				return true;
 			}
-			if (Menu.contains(action)) {
-				Mouse.setSpeed(speed);
-				return ExMenu.hoverAction(action);
-			}
 		}
 		Mouse.setSpeed(speed);
+		if (Menu.contains(action)) {
+			return ExMenu.hoverAction(action);
+		}
 		return false;
 	}
 
@@ -322,8 +304,7 @@ public class ExMouse {
 	 *            The height at which the tile is.
 	 * @return <tt>true</tt> if the action was hovered.
 	 */
-	public static boolean hover(final Tile tile, final String action,
-			final double dX, final double dY, final int height) {
+	public static boolean hover(final Tile tile, final String action, final double dX, final double dY, final int height) {
 		if (tile == null) {
 			return false;
 		}
@@ -333,9 +314,8 @@ public class ExMouse {
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 10 && tile != null && tile.isOnScreen(); i += 1) {
-			p = tile.getPoint(dX + Random.nextDouble(-0.1, 0.1),
-					dY + Random.nextDouble(-0.1, 0.1), height);
+		for (int i = 0; i < 20 && !Menu.contains(action) && tile != null && tile.isOnScreen(); i += 1) {
+			p = tile.getPoint(dX + Random.nextDouble(-0.1, 0.1), dY + Random.nextDouble(-0.1, 0.1), height);
 			if (!ExCalculations.isPointOnScreen(p)) {
 				return false;
 			}
@@ -347,12 +327,11 @@ public class ExMouse {
 				Mouse.setSpeed(speed);
 				return true;
 			}
-			if (Menu.contains(action)) {
-				Mouse.setSpeed(speed);
-				return ExMenu.hoverAction(action);
-			}
 		}
 		Mouse.setSpeed(speed);
+		if (Menu.contains(action)) {
+			return ExMenu.hoverAction(action);
+		}
 		return false;
 	}
 
@@ -428,20 +407,17 @@ public class ExMouse {
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 10 && model != null
-				&& ExCalculations.isPointOnScreen(p); i += 1) {
+		for (int i = 0; i < 20 && !Menu.contains(action) && model != null && ExCalculations.isPointOnScreen(p); i += 1) {
 			p = ExCalculations.getRandomPoint(model);
 			if (!ExCalculations.isPointOnScreen(p)) {
 				return false;
 			}
 			Mouse.move(p);
-			Task.sleep(150, 200);
-			if (Menu.contains(action)) {
-				Mouse.setSpeed(speed);
-				return Menu.click(action);
-			}
 		}
 		Mouse.setSpeed(speed);
+		if (Menu.contains(action)) {
+			return Menu.click(action);
+		}
 		return false;
 	}
 
@@ -493,19 +469,17 @@ public class ExMouse {
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 10 && tile != null && tile.isOnScreen(); i += 1) {
+		for (int i = 0; i < 20 && !Menu.contains(action) && tile != null && tile.isOnScreen(); i += 1) {
 			p = ExCalculations.getRandomPoint(tile);
 			if (!ExCalculations.isPointOnScreen(p)) {
 				return false;
 			}
 			Mouse.move(p);
-			Task.sleep(150, 200);
-			if (Menu.contains(action)) {
-				Mouse.setSpeed(speed);
-				return Menu.click(action);
-			}
 		}
 		Mouse.setSpeed(speed);
+		if (Menu.contains(action)) {
+			return Menu.click(action);
+		}
 		return false;
 	}
 
@@ -525,8 +499,8 @@ public class ExMouse {
 	 * @return <tt>true</tt> if the tile was interacted with successfully;
 	 *         <tt>false</tt> otherwise.
 	 */
-	public static boolean interact(final Tile tile, final String action,
-			final double dX, final double dY, final int height) {
+	public static boolean interact(final Tile tile, final String action, final double dX, final double dY,
+			final int height) {
 		if (tile == null) {
 			return false;
 		}
@@ -536,23 +510,17 @@ public class ExMouse {
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 10 && tile.isOnScreen(); i += 1) {
-			p = tile.getPoint(dX + Random.nextDouble(-0.1, 0.1),
-					dY + Random.nextDouble(-0.1, 0.1), height);
+		for (int i = 0; i < 20 && !Menu.contains(action) && tile.isOnScreen(); i += 1) {
+			p = tile.getPoint(dX + Random.nextDouble(-0.1, 0.1), dY + Random.nextDouble(-0.1, 0.1), height);
 			if (!ExCalculations.isPointOnScreen(p)) {
 				return false;
 			}
-			if (Menu.isOpen() && !Menu.contains(action.toLowerCase())) {
-				Mouse.moveRandomly(750);
-			}
 			Mouse.move(p);
-			Task.sleep(150, 200);
-			if (Menu.contains(action)) {
-				Mouse.setSpeed(speed);
-				return Menu.click(action);
-			}
 		}
 		Mouse.setSpeed(speed);
+		if (Menu.contains(action)) {
+			return Menu.click(action);
+		}
 		return false;
 	}
 
@@ -573,34 +541,14 @@ public class ExMouse {
 	 *            screen.
 	 */
 	public static void moveOffScreen(final int waitTime) {
-		final int speed = Mouse.getSpeed();
 		final Point mouse = Mouse.getLocation();
 		if (!Mouse.isPresent()) {
 			return;
 		}
-		switch (Random.nextInt(0, 2)) {
-			case 0:
-				Mouse.setSpeed(Random.nextInt(0, 4));
-				Mouse.moveOffScreen();
-				Task.sleep(waitTime);
-				Mouse.setSpeed(Math.max(0,
-						Math.min(9, speed + Random.nextInt(-1, 2))));
-				Mouse.move(mouse.x + Random.nextInt(-10, 10),
-						mouse.y + Random.nextInt(-10, 10));
-				Mouse.setSpeed(speed);
-				break;
-			case 1:
-				final int tempSpeed = Random.nextInt(0, 10);
-				Mouse.setSpeed(tempSpeed);
-				Mouse.moveOffScreen();
-				Task.sleep(waitTime);
-				Mouse.setSpeed(Math.min(9,
-						Math.max(0, tempSpeed + Random.nextInt(-1, 2))));
-				Mouse.move(mouse.x + Random.nextInt(-10, 10),
-						mouse.y + Random.nextInt(-10, 10));
-				Mouse.setSpeed(speed);
-				break;
-		}
+
+		Mouse.moveOffScreen();
+		Task.sleep(waitTime);
+		Mouse.move(mouse.x + Random.nextInt(-10, 10), mouse.y + Random.nextInt(-10, 10));
 	}
 
 	/**
@@ -701,10 +649,8 @@ public class ExMouse {
 			case 0:
 				Mouse.setSpeed(Random.nextInt(0, 4));
 				Mouse.move(generateRandomPoint(minDistance, maxDistance));
-				Mouse.setSpeed(Math.max(0,
-						Math.min(9, speed + Random.nextInt(-1, 2))));
-				Mouse.move(mouse.x + Random.nextInt(-10, 10),
-						mouse.y + Random.nextInt(-10, 10));
+				Mouse.setSpeed(Math.max(0, Math.min(9, speed + Random.nextInt(-1, 2))));
+				Mouse.move(mouse.x + Random.nextInt(-10, 10), mouse.y + Random.nextInt(-10, 10));
 				Mouse.setSpeed(speed);
 				break;
 			case 1:
@@ -717,10 +663,8 @@ public class ExMouse {
 				Mouse.move(generateRandomPoint(minDistance, maxDistance));
 				Mouse.setSpeed(Random.nextInt(0, 4));
 				Mouse.move(generateRandomPoint(minDistance, maxDistance));
-				Mouse.setSpeed(Math.max(0,
-						Math.min(9, speed + Random.nextInt(-1, 2))));
-				Mouse.move(mouse.x + Random.nextInt(-10, 10),
-						mouse.y + Random.nextInt(-10, 10));
+				Mouse.setSpeed(Math.max(0, Math.min(9, speed + Random.nextInt(-1, 2))));
+				Mouse.move(mouse.x + Random.nextInt(-10, 10), mouse.y + Random.nextInt(-10, 10));
 				Mouse.setSpeed(speed);
 				break;
 			case 3:
