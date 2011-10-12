@@ -10,9 +10,7 @@ import com.rsbuddy.script.wrappers.TilePath;
 import java.util.EnumSet;
 
 /**
- * 
  * @author Ramus
- * 
  */
 public class ExWalking {
 
@@ -96,9 +94,23 @@ public class ExWalking {
 		if (next == null) {
 			return false;
 		}
-		return Walking.findPath(next).traverse(
-				EnumSet.of(TraversalOption.HANDLE_RUN,
-						TraversalOption.SPACE_ACTIONS));
+		return Walking.findPath(next).traverse(EnumSet.of(TraversalOption.HANDLE_RUN, TraversalOption.SPACE_ACTIONS));
+	}
+
+	/**
+	 * Walks to the specified area. This handles running.
+	 * 
+	 * @param area
+	 *            The area to walk to.
+	 * @return <tt>true</tt> if the specified area was reached; <tt>false</tt>
+	 *         otherwise.
+	 */
+	public static boolean walkTo(final Area area) {
+		final Tile dest;
+		if ((dest = Walking.getDestination()) != null && area.contains(dest) && Players.getLocal().isMoving()) {
+			return true;
+		}
+		return walkTo(getRandom(area));
 	}
 
 	/**
@@ -126,8 +138,6 @@ public class ExWalking {
 		if (next == null) {
 			return false;
 		}
-		return Walking.findPath(next).traverse(
-				EnumSet.of(TraversalOption.HANDLE_RUN,
-						TraversalOption.SPACE_ACTIONS));
+		return Walking.findPath(next).traverse(EnumSet.of(TraversalOption.HANDLE_RUN, TraversalOption.SPACE_ACTIONS));
 	}
 }

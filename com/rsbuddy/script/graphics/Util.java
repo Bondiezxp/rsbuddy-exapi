@@ -2,6 +2,9 @@ package com.rsbuddy.script.graphics;
 
 import java.awt.Color;
 
+/**
+ * @author Ramus
+ */
 public class Util {
 
 	/**

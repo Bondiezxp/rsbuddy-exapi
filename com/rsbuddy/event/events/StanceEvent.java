@@ -2,14 +2,16 @@ package com.rsbuddy.event.events;
 
 import com.rsbuddy.script.wrappers.Character;
 
+/**
+ * @author Ramus
+ */
 public class StanceEvent {
 
 	private final Character character;
 	private final int previousStance;
 	private final int currentStance;
 
-	public StanceEvent(final Character character, final int previousStance,
-			final int currentStance) {
+	public StanceEvent(final Character character, final int previousStance, final int currentStance) {
 		this.character = character;
 		this.previousStance = previousStance;
 		this.currentStance = currentStance;

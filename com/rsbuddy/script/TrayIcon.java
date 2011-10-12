@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+/**
+ * @author Ramus
+ */
 public class TrayIcon {
 
 	private final java.awt.TrayIcon trayIcon;
@@ -77,8 +80,7 @@ public class TrayIcon {
 	 * @param messageType
 	 *            The message type.
 	 */
-	public void displayMessage(final String title, final String text,
-			final MessageType messageType) {
+	public void displayMessage(final String title, final String text, final MessageType messageType) {
 		if (!SystemTray.isSupported()) {
 			return;
 		}
@@ -92,8 +94,7 @@ public class TrayIcon {
 	 *         <tt>false</tt> otherwise.
 	 */
 	public boolean inSystemTray() {
-		for (final java.awt.TrayIcon ti : SystemTray.getSystemTray()
-				.getTrayIcons()) {
+		for (final java.awt.TrayIcon ti : SystemTray.getSystemTray().getTrayIcons()) {
 			if (ti.equals(trayIcon)) {
 				return true;
 			}

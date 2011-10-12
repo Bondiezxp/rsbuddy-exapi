@@ -1,11 +1,15 @@
 package com.rsbuddy.script.methods;
 
-import com.rsbuddy.script.task.Task;
+import com.rsbuddy.script.action.Action;
+import com.rsbuddy.script.util.Condition;
 import com.rsbuddy.script.util.Random;
 import com.rsbuddy.script.wrappers.Item;
 
 import org.rsbuddy.tabs.Inventory;
 
+/**
+ * @author Ramus
+ */
 public class ExInventory {
 
 	/**
@@ -132,7 +136,13 @@ public class ExInventory {
 			return false;
 		}
 		item.getComponent().hover();
-		Task.sleep(time);
+		Action.sleep(time, new Condition() {
+
+			@Override
+			public boolean isValid() {
+				return item.getComponent().getBoundingRect().contains(Mouse.getLocation());
+			}
+		});
 		return true;
 	}
 

@@ -8,6 +8,9 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.util.LinkedList;
 
+/**
+ * @author Ramus
+ */
 public class ExTiles {
 
 	/**
@@ -48,8 +51,7 @@ public class ExTiles {
 			if (!ExCalculations.isPointOnScreen(new Point[] { bl, br, tr, tl })) {
 				return;
 			}
-			g.drawPolygon(new Polygon(new int[] { bl.x, br.x, tr.x, tl.x },
-					new int[] { bl.y, br.y, tr.y, tl.y }, 4));
+			g.drawPolygon(new Polygon(new int[] { bl.x, br.x, tr.x, tl.x }, new int[] { bl.y, br.y, tr.y, tl.y }, 4));
 		}
 	}
 
@@ -91,9 +93,8 @@ public class ExTiles {
 			if (!ExCalculations.isPointOnScreen(new Point[] { bl, br, tr, tl })) {
 				return;
 			}
-			final Polygon poly = new Polygon(
-					new int[] { bl.x, br.x, tr.x, tl.x }, new int[] { bl.y,
-							br.y, tr.y, tl.y }, 4);
+			final Polygon poly = new Polygon(new int[] { bl.x, br.x, tr.x, tl.x },
+					new int[] { bl.y, br.y, tr.y, tl.y }, 4);
 			g.fillPolygon(poly);
 		}
 	}
@@ -109,8 +110,7 @@ public class ExTiles {
 	 *            4 (N, E, S, W).
 	 * @return The adjacent tiles of the specified tile.
 	 */
-	public static Tile[] getAdjacentTilesTo(final Tile tile,
-			final boolean diagonal) {
+	public static Tile[] getAdjacentTilesTo(final Tile tile, final boolean diagonal) {
 		if (tile == null) {
 			return null;
 		}
@@ -158,8 +158,7 @@ public class ExTiles {
 		final LinkedList<Tile> tiles = new LinkedList<Tile>();
 		for (int x = 0; x < 105; x += 1) {
 			for (int y = 0; y < 105; y += 1) {
-				final Tile tile = new Tile(x + Game.getMapBase().getX(), y
-						+ Game.getMapBase().getY());
+				final Tile tile = new Tile(x + Game.getMapBase().getX(), y + Game.getMapBase().getY());
 				if (!tile.isOnMap()) {
 					continue;
 				}
@@ -186,10 +185,8 @@ public class ExTiles {
 		Tile close = null;
 		for (int x = 0; x < 105; x += 1) {
 			for (int y = 0; y < 105; y += 1) {
-				final Tile tile = new Tile(x + Game.getMapBase().getX(), y
-						+ Game.getMapBase().getY());
-				if (tile == null
-						|| (minimap ? !tile.isOnMap() : !tile.isOnScreen())) {
+				final Tile tile = new Tile(x + Game.getMapBase().getX(), y + Game.getMapBase().getY());
+				if (tile == null || (minimap ? !tile.isOnMap() : !tile.isOnScreen())) {
 					continue;
 				}
 				final Point s = minimap ? tile.toMap() : tile.getCenterPoint();
@@ -197,9 +194,8 @@ public class ExTiles {
 					continue;
 				}
 				if (close == null
-						|| (minimap ? close.toMap().distance(p) > tile.toMap()
-								.distance(p) : close.getCenterPoint().distance(
-								p) > tile.getCenterPoint().distance(p))) {
+						|| (minimap ? close.toMap().distance(p) > tile.toMap().distance(p) : close.getCenterPoint()
+								.distance(p) > tile.getCenterPoint().distance(p))) {
 					close = tile;
 				}
 			}
@@ -218,8 +214,7 @@ public class ExTiles {
 		final int[][] flags = Walking.getCollisionFlags(Game.getFloorLevel());
 		final Tile offset = Walking.getCollisionOffset(Game.getFloorLevel());
 		final Tile baseTile = Game.getMapBase();
-		if ((flags[tile.getX() - (baseTile.getX() + offset.getX())][tile.getY()
-				- (baseTile.getY() + offset.getY())] & LocalPath.BLOCKED) != 0) {
+		if ((flags[tile.getX() - (baseTile.getX() + offset.getX())][tile.getY() - (baseTile.getY() + offset.getY())] & LocalPath.BLOCKED) != 0) {
 			return true;
 		}
 		return false;

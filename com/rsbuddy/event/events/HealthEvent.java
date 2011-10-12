@@ -2,14 +2,16 @@ package com.rsbuddy.event.events;
 
 import com.rsbuddy.script.wrappers.Character;
 
+/**
+ * @author Ramus
+ */
 public class HealthEvent {
 
 	private final Character character;
 	private final int previousHealth;
 	private final int currentHealth;
 
-	public HealthEvent(final Character character, final int previousHealth,
-			final int currentHealth) {
+	public HealthEvent(final Character character, final int previousHealth, final int currentHealth) {
 		this.character = character;
 		this.previousHealth = previousHealth;
 		this.currentHealth = currentHealth;

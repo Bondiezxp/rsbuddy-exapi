@@ -1,7 +1,8 @@
-package com.rsbuddy.script.wrappers;
+package com.rsbuddy.script.util;
 
 import com.rsbuddy.script.methods.Game;
 import com.rsbuddy.script.task.LoopTask;
+import com.rsbuddy.script.wrappers.Item;
 
 import org.rsbuddy.tabs.Inventory;
 
@@ -39,8 +40,7 @@ public class InventoryTracker extends LoopTask {
 	 */
 	private int getCount() {
 		int count = 0;
-		final Item[] items = cache ? Inventory.getCachedItems() : Inventory
-				.getItems();
+		final Item[] items = cache ? Inventory.getCachedItems() : Inventory.getItems();
 		for (final Item item : items) {
 			if (item == null) {
 				continue;

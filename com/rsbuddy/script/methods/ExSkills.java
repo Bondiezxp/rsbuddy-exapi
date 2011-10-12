@@ -4,6 +4,9 @@ import com.rsbuddy.script.graphics.Util;
 
 import java.text.DecimalFormat;
 
+/**
+ * @author Ramus
+ */
 public class ExSkills {
 
 	/**
@@ -47,8 +50,7 @@ public class ExSkills {
 		if (xpTotal == 0) {
 			return 0;
 		}
-		final double xpDone = Skills.getCurrentExp(skill)
-				- Skills.XP_TABLE[lvl];
+		final double xpDone = Skills.getCurrentExp(skill) - Skills.XP_TABLE[lvl];
 		final double progress = 100 * xpDone / xpTotal;
 		return Double.valueOf(df.format(progress));
 	}
@@ -78,8 +80,7 @@ public class ExSkills {
 	 *            The xp gained in 1 hour.
 	 * @return The time to the specified level in the given skill.
 	 */
-	public static long getTimeToLevel(final int skill, final int level,
-			final int xpGainedPerHour) {
+	public static long getTimeToLevel(final int skill, final int level, final int xpGainedPerHour) {
 		if (xpGainedPerHour < 1) {
 			return 0L;
 		}
@@ -100,10 +101,8 @@ public class ExSkills {
 	 *            The xp gained in the amount of run time.
 	 * @return The time to the next level.
 	 */
-	public static long getTimeToLevel(final int skill, final int level,
-			final int runTime, final int xpGained) {
-		return getTimeToLevel(skill, level,
-				Util.getPerHourValue(runTime, xpGained));
+	public static long getTimeToLevel(final int skill, final int level, final int runTime, final int xpGained) {
+		return getTimeToLevel(skill, level, Util.getPerHourValue(runTime, xpGained));
 	}
 
 	/**
@@ -116,10 +115,8 @@ public class ExSkills {
 	 *            The xp gained in 1 hour.
 	 * @return The time to the next level in the given skill.
 	 */
-	public static long getTimeToNextLevel(final int skill,
-			final int xpGainedPerHour) {
-		return getTimeToLevel(skill, Skills.getRealLevel(skill) + 1,
-				xpGainedPerHour);
+	public static long getTimeToNextLevel(final int skill, final int xpGainedPerHour) {
+		return getTimeToLevel(skill, Skills.getRealLevel(skill) + 1, xpGainedPerHour);
 	}
 
 	/**
@@ -134,9 +131,7 @@ public class ExSkills {
 	 *            The xp gained in the amount of run time.
 	 * @return The time to the next level.
 	 */
-	public static long getTimeToNextLevel(final int skill, final long runTime,
-			final int xpGained) {
-		return getTimeToNextLevel(skill,
-				Util.getPerHourValue(runTime, xpGained));
+	public static long getTimeToNextLevel(final int skill, final long runTime, final int xpGained) {
+		return getTimeToNextLevel(skill, Util.getPerHourValue(runTime, xpGained));
 	}
 }
