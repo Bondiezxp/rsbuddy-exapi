@@ -99,7 +99,7 @@ public class ActionHandler extends LoopTask implements ActionListener {
 	}
 
 	/**
-	 * Stops all active actions in this handler.
+	 * Stops all active actions in this handler and deactivates this handler.
 	 */
 	public void stopAll() {
 		synchronized (actions) {

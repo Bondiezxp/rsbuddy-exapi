@@ -61,12 +61,13 @@ public abstract class Action extends Task {
 	}
 
 	/**
-	 * Sleeps until the either the condition is valid or the time is reached.
+	 * Sleeps until either the condition is valid or the time is reached with
+	 * the given threshold.
 	 * 
 	 * @param time
-	 *            The time before the next check is made (I use 10).
+	 *            The time before the next check is made.
 	 * @param threshold
-	 *            The threshold to sleep before the next check.
+	 *            The threshold to sleep before the next check (I use 10).
 	 * @param condition
 	 *            The condition to wait for.
 	 */
