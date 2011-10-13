@@ -3,23 +3,24 @@ package com.rsbuddy.script.action;
 import com.rsbuddy.script.task.LoopTask;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ActionHandler extends LoopTask implements ActionListener {
 
-	private final List<Action> actions = Collections.synchronizedList(new LinkedList<Action>());
-	private static Action currentAction = null;
+	private class ActionComparator implements Comparator<Action> {
 
-	/**
-	 * Gets the current action.
-	 * 
-	 * @return The current action.
-	 */
-	public static Action getCurrentAction() {
-		return currentAction;
+		@Override
+		public int compare(final Action a1, final Action a2) {
+			final int diff = ((Integer) a1.getPriority()).compareTo(a2.getPriority());
+			return diff < 0 ? 1 : diff > 0 ? -1 : 0;
+		}
 	}
+
+	private final List<Action> actions = Collections.synchronizedList(new LinkedList<Action>());
+	protected static Action currentAction = null;
 
 	/**
 	 * Gets the status of the current action.
@@ -33,6 +34,8 @@ public class ActionHandler extends LoopTask implements ActionListener {
 		return currentAction.getStatus();
 	}
 
+	private boolean running;
+
 	/**
 	 * Gets all of the active actions.
 	 * 
@@ -44,13 +47,19 @@ public class ActionHandler extends LoopTask implements ActionListener {
 
 	@Override
 	public int loop() {
+		if (!running) {
+			return -1;
+		}
 		try {
-			for (final Action act : actions) {
-				if (!act.activate()) {
-					stop(act);
-					continue;
+			synchronized (actions) {
+				Collections.sort(actions, new ActionComparator());
+				for (final Action act : actions) {
+					if (!act.activate()) {
+						stop(act);
+						continue;
+					}
+					act.execute();
 				}
-				act.execute();
 			}
 		} catch (final ConcurrentModificationException e) {
 			return 0;
@@ -65,7 +74,15 @@ public class ActionHandler extends LoopTask implements ActionListener {
 
 	@Override
 	public void onActionStopped(final Action action) {
-		actions.remove(action);
+		synchronized (actions) {
+			actions.remove(action);
+		}
+	}
+
+	@Override
+	public boolean onStart() {
+		running = true;
+		return true;
 	}
 
 	/**
@@ -85,8 +102,11 @@ public class ActionHandler extends LoopTask implements ActionListener {
 	 * Stops all active actions in this handler.
 	 */
 	public void stopAll() {
-		for (final Action act : actions) {
-			act.active = false;
+		synchronized (actions) {
+			for (final Action act : actions) {
+				act.active = false;
+			}
+			running = false;
 		}
 	}
 
@@ -99,10 +119,12 @@ public class ActionHandler extends LoopTask implements ActionListener {
 	 * @return <tt>true</tt> if the action was added. <tt>false</tt> otherwise.
 	 */
 	public boolean submit(final Action action) {
-		if (actions.contains(action)) {
-			return true;
+		synchronized (actions) {
+			if (actions.contains(action)) {
+				return true;
+			}
+			action.setHandler(this);
+			return actions.add(action);
 		}
-		action.setHandler(this);
-		return actions.add(action);
 	}
 }
