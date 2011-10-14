@@ -22,18 +22,6 @@ public class ActionHandler extends LoopTask implements ActionListener {
 	private final List<Action> actions = Collections.synchronizedList(new LinkedList<Action>());
 	protected static Action currentAction = null;
 
-	/**
-	 * Gets the status of the current action.
-	 * 
-	 * @return The current status of the current action.
-	 */
-	public static String getStatus() {
-		if (currentAction == null || currentAction.getStatus() == null) {
-			return "";
-		}
-		return currentAction.getStatus();
-	}
-
 	private boolean running;
 
 	/**
