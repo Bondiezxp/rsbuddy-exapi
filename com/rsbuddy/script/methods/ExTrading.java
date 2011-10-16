@@ -11,6 +11,7 @@ import com.rsbuddy.script.wrappers.Widget;
 import org.rsbuddy.tabs.Inventory;
 
 /**
+ * @author TantricBots
  * @author Ramus
  */
 public class ExTrading {

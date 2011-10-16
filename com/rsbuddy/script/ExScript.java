@@ -52,8 +52,12 @@ public abstract class ExScript extends ActiveScript implements CharacterListener
 			return;
 		}
 		final LinkedList<Character[]> chars = new LinkedList<Character[]>();
-		chars.add(Npcs.getLoaded());
-		chars.add(Players.getLoaded());
+		if (Npcs.getLoaded() != null) {
+			chars.add(Npcs.getLoaded());
+		}
+		if (Players.getLoaded() != null) {
+			chars.add(Players.getLoaded());
+		}
 		for (int i = 0; i < chars.size(); i += 1) {
 			for (final Character c : chars.get(i)) {
 				if (c == null) {
@@ -93,6 +97,9 @@ public abstract class ExScript extends ActiveScript implements CharacterListener
 			}
 		}
 		for (int i = 0; i < Settings.getArray().length; i += 1) {
+			if (i >= Settings.getArray().length) {
+				continue;
+			}
 			final int setting = Settings.getArray()[i];
 			Integer[] data = cache.get(i);
 			if (data == null || data.length < 1) {

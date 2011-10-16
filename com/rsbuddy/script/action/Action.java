@@ -1,15 +1,17 @@
 package com.rsbuddy.script.action;
 
+import com.rsbuddy.event.listeners.PaintListener;
 import com.rsbuddy.script.task.Task;
 import com.rsbuddy.script.util.Condition;
 
+import java.awt.Graphics;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * @author Ramus
  */
-public abstract class Action extends Task {
+public abstract class Action extends Task implements PaintListener {
 
 	/**
 	 * The minimum priority that an action can have.
@@ -184,6 +186,13 @@ public abstract class Action extends Task {
 	 * This is what the action should do on activation.
 	 */
 	public abstract void onExecute();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onRepaint(final Graphics g) {
+	}
 
 	/**
 	 * Sets this action's current handler.

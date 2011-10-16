@@ -116,8 +116,7 @@ public class ExPrayer {
 		private final int ppoints;
 
 		private Equipment(final int id, final int ppoints) {
-			ids = new int[] { id };
-			this.ppoints = ppoints;
+			this(new int[] { id }, ppoints);
 		}
 
 		private Equipment(final int[] ids, final int ppoints) {

@@ -68,7 +68,8 @@ public class ExGroundItems {
 	 *         otherwise.
 	 */
 	public static boolean isValid(final GroundItem item) {
-		if (item == null || item.getItem() == null || item.getItem().getId() == -1 || item.getLocation() == null) {
+		if (item == null || item.getItem() == null || !item.getItem().isComponentValid()
+				|| item.getItem().getId() == -1 || item.getLocation() == null) {
 			return false;
 		}
 		for (final GroundItem gi : GroundItems.getAllAt(item.getLocation())) {

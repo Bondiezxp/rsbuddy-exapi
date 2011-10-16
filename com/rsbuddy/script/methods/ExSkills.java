@@ -65,7 +65,7 @@ public class ExSkills {
 	 *         with 2 decimal places.
 	 */
 	public static double getPercentToNextLevel(final int skill) {
-		return getPercentToNextLevel(Skills.getRealLevel(skill) + 1);
+		return getPercentToLevel(skill, Skills.getRealLevel(skill) + 1);
 	}
 
 	/**
