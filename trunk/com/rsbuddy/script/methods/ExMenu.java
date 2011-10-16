@@ -59,12 +59,15 @@ public class ExMenu {
 			return false;
 		}
 		final int xOff = Random.nextInt(4, items[idx].length() * 4);
-		final int yOff = 21 + 16 * idx + Random.nextInt(6, 12);
+		final int yOff = 21 + idx * 16 + Random.nextInt(0, 16);
 		final Point p = new Point(menu.x + xOff, menu.y + yOff);
 		if (!ExCalculations.isPointOnScreen(p) || !Menu.isOpen()) {
 			return false;
 		}
-		Mouse.move(p, 2, 2);
+		Mouse.move(p);
+		if (!Menu.isOpen()) {
+			return false;
+		}
 		Task.sleep(time);
 		return Menu.isOpen() && Menu.contains(action);
 	}
