@@ -6,10 +6,13 @@ import java.awt.Image;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.net.URL;
+import java.util.LinkedHashMap;
 
 import javax.imageio.ImageIO;
 
 public class ImageLoader {
+
+	private static final LinkedHashMap<String, Image> CACHE = new LinkedHashMap<String, Image>();
 
 	/**
 	 * Gets an image from a file if it exists, otherwise it gets it from a url
@@ -23,6 +26,9 @@ public class ImageLoader {
 	 *         from the specified url.
 	 */
 	public static Image getImage(final String fileName, final String imageURL) {
+		if (CACHE.containsKey(fileName)) {
+			return CACHE.get(fileName);
+		}
 		try {
 			final File f = new File(Environment.getStorageDirectory(), fileName);
 			if (!f.exists()) {
@@ -32,12 +38,14 @@ public class ImageLoader {
 					return null;
 				}
 				ImageIO.write((RenderedImage) img, "PNG", f);
+				CACHE.put(fileName, img);
 				return img;
 			}
 			final Image img = ImageIO.read(f);
 			if (img == null) {
 				return null;
 			}
+			CACHE.put(fileName, img);
 			return img;
 		} catch (final Exception e) {
 			return null;

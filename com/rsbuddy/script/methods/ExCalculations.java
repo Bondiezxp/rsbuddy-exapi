@@ -25,9 +25,9 @@ public class ExCalculations {
 		if (model == null) {
 			return null;
 		}
-		final Polygon[] trianlges = model.getTriangles();
+		final Polygon[] triangles = model.getTriangles();
 		final LinkedList<Point> points = new LinkedList<Point>();
-		for (final Polygon triangle : trianlges) {
+		for (final Polygon triangle : triangles) {
 			for (int i = 0; i < triangle.npoints; i += 1) {
 				points.add(new Point(triangle.xpoints[i], triangle.ypoints[i]));
 			}

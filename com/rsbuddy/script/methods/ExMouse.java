@@ -588,7 +588,7 @@ public class ExMouse {
 	 *            The number of tabs to open.
 	 */
 	public static void openXTabs(final int x) {
-		openXTabs(x, Random.nextInt(5000, 10000));
+		openXTabs(x, 5000, 10000);
 	}
 
 	/**
@@ -601,12 +601,16 @@ public class ExMouse {
 	 *            The time in milliseconds to wait before opening the next tab.
 	 */
 	public static void openXTabs(final int x, final int waitTime) {
+		openXTabs(x, waitTime, waitTime);
+	}
+
+	public static void openXTabs(final int x, final int min, final int max) {
 		for (int i = 0; i < x; i += 1) {
 			final int tab = Random.nextInt(0, 17);
 			if (Game.getCurrentTab() != tab) {
 				Game.openTab(tab);
 			}
-			Task.sleep(waitTime);
+			Task.sleep(min, max);
 		}
 	}
 

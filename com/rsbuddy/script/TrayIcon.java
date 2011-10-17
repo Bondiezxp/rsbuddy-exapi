@@ -61,7 +61,7 @@ public class TrayIcon {
 	 * Adds the tray icon to the system tray if supported.
 	 */
 	public void addToSystemTray() {
-		if (!SystemTray.isSupported() || inSystemTray()) {
+		if (inSystemTray()) {
 			return;
 		}
 		try {
@@ -81,7 +81,7 @@ public class TrayIcon {
 	 *            The message type.
 	 */
 	public void displayMessage(final String title, final String text, final MessageType messageType) {
-		if (!SystemTray.isSupported()) {
+		if (!inSystemTray()) {
 			return;
 		}
 		trayIcon.displayMessage(title, text, messageType);
@@ -106,7 +106,7 @@ public class TrayIcon {
 	 * Removes the tray icon from the system tray.
 	 */
 	public void removeFromSystemTray() {
-		if (!SystemTray.isSupported() || !inSystemTray()) {
+		if (!inSystemTray()) {
 			return;
 		}
 		SystemTray.getSystemTray().remove(trayIcon);
