@@ -46,7 +46,7 @@ public class ExMenu {
 				}
 			});
 		}
-		if (!Menu.isOpen() || !Menu.contains(action)) {
+		if (!Menu.isOpen() || !Menu.contains(action) || Menu.isCollapsed()) {
 			return false;
 		}
 		final Point menu = Menu.getLocation();

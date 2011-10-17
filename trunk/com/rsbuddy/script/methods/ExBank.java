@@ -14,13 +14,13 @@ public class ExBank {
 
 	public static class BankItem {
 
-		public static final int WITHDRAW = 0x1;
-		public static final int DEPOSIT = 0x2;
-		public static final int ALL = 0x4;
-		public static final int ALL_EXCEPT = 0x8;
-		public static final int NOTED = 0x10;
-		public static final int ALL_FAMILIAR = 0x20;
-		public static final int ALL_EQUIPPED = 0X40;
+		public static final int ALL = 0x1;
+		public static final int ALL_FAMILIAR = 0x2;
+		public static final int ALL_EQUIPPED = 0x4;
+		public static final int ALL_EXCEPT = 0x80;
+		public static final int DEPOSIT = 0x10;
+		public static final int NOTED = 0x20;
+		public static final int WITHDRAW = 0x40;
 
 		private final int amount;
 		private final int options;
@@ -29,8 +29,8 @@ public class ExBank {
 		/**
 		 * Used for storing data when banking.
 		 * 
-		 * @param options
-		 *            The options to do. Example BankItem.WITHDRAW |
+		 * @param action
+		 *            The options to do. For example BankItem.WITHDRAW |
 		 *            BankItem.ALL | BankItem.NOTED.
 		 * @param amount
 		 *            The amount to withdraw/deposit. Use -1 when depositing all
@@ -38,10 +38,10 @@ public class ExBank {
 		 * @param ids
 		 *            The item ids to bank.
 		 */
-		public BankItem(final int options, final int amount, final int... ids) {
+		public BankItem(final int action, final int amount, final int... ids) {
 			this.amount = amount;
 			this.ids = ids;
-			this.options = options;
+			options = action;
 		}
 
 		public int getAmount() {
@@ -81,8 +81,13 @@ public class ExBank {
 			final int amount = bankItem.getAmount();
 			final int options = bankItem.getOptions();
 			if ((options & BankItem.WITHDRAW) == BankItem.WITHDRAW) {
-				for (final int id : ids) {
-					withdraw(id, amount, (options & BankItem.NOTED) == BankItem.NOTED);
+				final boolean noted = (options & BankItem.NOTED) == BankItem.NOTED;
+				if ((options & BankItem.ALL) == BankItem.ALL) {
+					withdrawAll(ids, noted);
+				} else {
+					for (final int id : ids) {
+						withdraw(id, amount, noted);
+					}
 				}
 			} else if ((options & BankItem.DEPOSIT) == BankItem.DEPOSIT) {
 				if ((options & BankItem.ALL) == BankItem.ALL) {
@@ -98,6 +103,8 @@ public class ExBank {
 						deposit(id, amount);
 					}
 				}
+			} else {
+				throw new IllegalArgumentException();
 			}
 		}
 		closeBank();
@@ -230,6 +237,32 @@ public class ExBank {
 						return Inventory.getCount(id) == endCount;
 					}
 				});
+			}
+		}
+	}
+
+	private static void withdrawAll(final int[] ids, final boolean noted) {
+		if (ids == null || ids.length == 0) {
+			return;
+		}
+		if (noted) {
+			Bank.setWithdrawModeToNote();
+		} else {
+			Bank.setWithdrawModeToItem();
+		}
+		final int startCount = Inventory.getCount(ids);
+		final int endCount = startCount + 28 - Inventory.getCount();
+		for (int i = 0; Inventory.getCount(ids) != endCount && i < 3; i += 1) {
+			for (int id = 0; id < ids.length; id += 1) {
+				if (Bank.withdraw(id, 0)) {
+					Action.sleep(2500, new Condition() {
+
+						@Override
+						public boolean isValid() {
+							return Inventory.getCount(ids) == endCount;
+						}
+					});
+				}
 			}
 		}
 	}

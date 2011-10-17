@@ -204,7 +204,7 @@ public class ExTiles {
 	}
 
 	/**
-	 * Author - Biking. Checks wether or not the specified tile is blocked.
+	 * Checks wether or not the specified tile is blocked.
 	 * 
 	 * @param tile
 	 *            The tile to check.
