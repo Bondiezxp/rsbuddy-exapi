@@ -86,8 +86,9 @@ public class ExWalking {
 		}
 	}
 
-	private static final String[] OBJECT_NAMES = { "ladder", "stairs", "stair case", "door", "gate", "stile" };
-	private static final String[] OBJECT_ACTIONS = { "open", "climb-up", "climb-down", "climb-over" };
+	private static final String[][] OBSTACLES = { { "door", "open" }, { "gate", "open" }, { "stile", "climb-over" } };
+	private static final String[][] PLANE_OBSTACLES = { { "ladder", "climb-up", "climb-down" },
+			{ "stairs", "climb-up", "climb-down" } };
 	private static String action = null;
 
 	private static boolean canTakeFerry(final Ferry ferry) {
@@ -255,6 +256,13 @@ public class ExWalking {
 			}
 			return localPath.traverse();
 		}
+		if (!traverseDoor(dest, localPath)) {
+			return false;
+		}
+		return traverse(dest);
+	}
+
+	private static boolean traverseDoor(final Tile dest, final LocalPath localPath) {
 		final GameObject block = Objects.getNearest(new Filter<GameObject>() {
 
 			@Override
@@ -263,19 +271,20 @@ public class ExWalking {
 						|| go.getDef().getName() == null) {
 					return false;
 				}
-				int i = 0;
-				for (final String name : OBJECT_NAMES) {
-					if (go.getDef().getName().equalsIgnoreCase(name)) {
-						i = 1;
+				boolean found = false;
+				int i;
+				for (i = 0; i < OBSTACLES.length; i += 1) {
+					if (go.getDef().getName().equalsIgnoreCase(OBSTACLES[i][0])) {
+						found = true;
 						break;
 					}
 				}
-				if (i == 0) {
+				if (found) {
 					return false;
 				}
-				for (final String action : OBJECT_ACTIONS) {
+				for (int j = 0; j < OBSTACLES[i].length; j += 1) {
 					for (final String act : go.getDef().getActions()) {
-						if (action.equalsIgnoreCase(act)) {
+						if (OBSTACLES[i][j].equalsIgnoreCase(act)) {
 							ExWalking.action = act;
 							return true;
 						}
@@ -288,12 +297,9 @@ public class ExWalking {
 			return traverse(dest);
 		}
 		if (block == null || action == null) {
-			return false;
+			return true;
 		}
 		if (!block.isOnScreen()) {
-			if (block.getLocation().isOnScreen()) {
-				return localPath.getEnd().interact("Walk here");
-			}
 			return block.getLocation().clickOnMap();
 		}
 		if (!block.interact(action)) {
@@ -302,7 +308,7 @@ public class ExWalking {
 		for (int i = 0; block != null && i < 10; i += 1) {
 			Task.sleep(250);
 		}
-		return traverse(dest);
+		return true;
 	}
 
 	/**

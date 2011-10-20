@@ -131,6 +131,13 @@ public class ExTrading {
 			return items.toArray(new Item[items.size()]);
 		}
 
+		public static Player getTrader() {
+			if (!isOpen()) {
+				return null;
+			}
+			return Players.getNearest(getWidget().getComponent(WIDGET_TRADE_TRADER).getText());
+		}
+
 		public static Item[] getTraderItems() {
 			if (!isOpen()) {
 				return null;
@@ -145,6 +152,15 @@ public class ExTrading {
 				items.add(new Item(item));
 			}
 			return items.toArray(new Item[items.size()]);
+		}
+
+		public static Widget getWidget() {
+			return Widgets.get(WIDGET_TRADE);
+		}
+
+		public static boolean isOpen() {
+			final Widget w = getWidget();
+			return w != null && w.isValid() && getWidget().getComponent(0).isVisible();
 		}
 
 		public static boolean offer(final int id, final int count) {
@@ -183,22 +199,6 @@ public class ExTrading {
 				}
 			});
 			return Inventory.getCount(id) == endCount;
-		}
-
-		public static Player getTrader() {
-			if (!isOpen()) {
-				return null;
-			}
-			return Players.getNearest(getWidget().getComponent(WIDGET_TRADE_TRADER).getText());
-		}
-
-		public static Widget getWidget() {
-			return Widgets.get(WIDGET_TRADE);
-		}
-
-		public static boolean isOpen() {
-			final Widget w = getWidget();
-			return w != null && w.isValid() && getWidget().getComponent(0).isVisible();
 		}
 	}
 
