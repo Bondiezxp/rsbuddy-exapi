@@ -18,6 +18,7 @@ import org.rsbuddy.tabs.Quest;
 /**
  * @author Ramus
  */
+@SuppressWarnings("unused")
 public class ExWalking {
 
 	public static enum Ferry {

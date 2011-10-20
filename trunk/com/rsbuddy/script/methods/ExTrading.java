@@ -26,6 +26,11 @@ public class ExTrading {
 		public static final int WIDGET_TRADE_BUTTON_DECLINE = 37;
 		public static final int WIDGET_TRADE_TRADER = 54;
 
+		/**
+		 * Accepts the current trade.
+		 * 
+		 * @return <tt>true</tt> if the trade was accepted.
+		 */
 		public static boolean accept() {
 			if (!isOpen()) {
 				return false;
@@ -36,6 +41,12 @@ public class ExTrading {
 			return getWidget().getComponent(WIDGET_TRADE_BUTTON_ACCEPT).interact("Accept");
 		}
 
+		/**
+		 * Closes the current trade.
+		 * 
+		 * @return <tt>true</tt> if the trade was closes; <tt>false</tt>
+		 *         otherwise.
+		 */
 		public static boolean close() {
 			if (!isOpen()) {
 				return true;
@@ -43,6 +54,12 @@ public class ExTrading {
 			return getWidget().getComponent(WIDGET_TRADE_BUTTON_CLOSE).interact("Close");
 		}
 
+		/**
+		 * Declines the current trade.
+		 * 
+		 * @return <tt>true</tt> if the trade was declined; <tt>false</tt>
+		 *         otherwise.
+		 */
 		public static boolean decline() {
 			if (!isOpen()) {
 				return true;
@@ -50,6 +67,11 @@ public class ExTrading {
 			return getWidget().getComponent(WIDGET_TRADE_BUTTON_DECLINE).interact("Decline");
 		}
 
+		/**
+		 * Gets the <tt>Player</tt> that we are trading with.
+		 * 
+		 * @return The <tt>Player</tt> that we are trading with.
+		 */
 		public static Player getTrader() {
 			if (!isOpen()) {
 				return null;
@@ -57,13 +79,32 @@ public class ExTrading {
 			return Players.getNearest(getWidget().getComponent(WIDGET_TRADE_TRADER).getText());
 		}
 
+		/**
+		 * Gets the widget of the trade screen.
+		 * 
+		 * @return The widget of the trade screen.
+		 */
 		public static Widget getWidget() {
 			return Widgets.get(WIDGET_TRADE);
 		}
 
+		/**
+		 * Checks whether the offer window is open.
+		 * 
+		 * @return <tt>true</tt> if open; <tt>false</tt> otherwise.
+		 */
 		public static boolean isOpen() {
+			return isValid() && getWidget().getComponent(1).isVisible();
+		}
+
+		/**
+		 * Checks whether the widget is valid.
+		 * 
+		 * @return <tt>true</tt> if valid; <tt>false</tt> otherwise.
+		 */
+		public static boolean isValid() {
 			final Widget w = getWidget();
-			return w != null && w.isValid() && getWidget().getComponent(0).isVisible();
+			return w != null && w.isValid();
 		}
 	}
 
@@ -79,6 +120,11 @@ public class ExTrading {
 		public static final int WIDGET_TRADE_TRADER_ITEMS = 33;
 		public static final int WIDGET_TRADE_TRADER = 22;
 
+		/**
+		 * Accepts the current trade.
+		 * 
+		 * @return <tt>true</tt> if the trade was accepted.
+		 */
 		public static boolean accept() {
 			if (!isOpen()) {
 				return false;
@@ -89,6 +135,12 @@ public class ExTrading {
 			return getWidget().getComponent(WIDGET_TRADE_BUTTON_ACCEPT).interact("Accept");
 		}
 
+		/**
+		 * Closes the current trade.
+		 * 
+		 * @return <tt>true</tt> if the trade was closes; <tt>false</tt>
+		 *         otherwise.
+		 */
 		public static boolean close() {
 			if (!isOpen()) {
 				return true;
@@ -96,6 +148,12 @@ public class ExTrading {
 			return getWidget().getComponent(WIDGET_TRADE_BUTTON_CLOSE).interact("Close");
 		}
 
+		/**
+		 * Declines the current trade.
+		 * 
+		 * @return <tt>true</tt> if the trade was declined; <tt>false</tt>
+		 *         otherwise.
+		 */
 		public static boolean decline() {
 			if (!isOpen()) {
 				return true;
@@ -103,6 +161,11 @@ public class ExTrading {
 			return getWidget().getComponent(WIDGET_TRADE_BUTTON_DECLINE).interact("Decline");
 		}
 
+		/**
+		 * Gets the number of free slots the other player has.
+		 * 
+		 * @return The number of free slots.
+		 */
 		public static int getFreeSlots() {
 			if (!isOpen()) {
 				return 0;
@@ -115,6 +178,11 @@ public class ExTrading {
 			return 0;
 		}
 
+		/**
+		 * Gets the items that are currently being offered.
+		 * 
+		 * @return The items that are currently being offered.
+		 */
 		public static Item[] getMyItems() {
 			if (!isOpen()) {
 				return null;
@@ -131,6 +199,11 @@ public class ExTrading {
 			return items.toArray(new Item[items.size()]);
 		}
 
+		/**
+		 * Gets the <tt>Player</tt> that we are trading with.
+		 * 
+		 * @return The <tt>Player</tt> that we are trading with.
+		 */
 		public static Player getTrader() {
 			if (!isOpen()) {
 				return null;
@@ -138,6 +211,11 @@ public class ExTrading {
 			return Players.getNearest(getWidget().getComponent(WIDGET_TRADE_TRADER).getText());
 		}
 
+		/**
+		 * Gets the items offered by the other player.
+		 * 
+		 * @return The items offered by the other player.
+		 */
 		public static Item[] getTraderItems() {
 			if (!isOpen()) {
 				return null;
@@ -154,15 +232,44 @@ public class ExTrading {
 			return items.toArray(new Item[items.size()]);
 		}
 
+		/**
+		 * Gets the widget of the trade screen.
+		 * 
+		 * @return The widget of the trade screen.
+		 */
 		public static Widget getWidget() {
 			return Widgets.get(WIDGET_TRADE);
 		}
 
+		/**
+		 * Checks whether the offer window is open.
+		 * 
+		 * @return <tt>true</tt> if open; <tt>false</tt> otherwise.
+		 */
 		public static boolean isOpen() {
-			final Widget w = getWidget();
-			return w != null && w.isValid() && getWidget().getComponent(0).isVisible();
+			return isValid() && getWidget().getComponent(1).isVisible();
 		}
 
+		/**
+		 * Checks whether the widget is valid.
+		 * 
+		 * @return <tt>true</tt> if valid; <tt>false</tt> otherwise.
+		 */
+		public static boolean isValid() {
+			final Widget w = getWidget();
+			return w != null && w.isValid();
+		}
+
+		/**
+		 * Offers the item with the specified id for trade.
+		 * 
+		 * @param id
+		 *            The id of the item.
+		 * @param count
+		 *            The amount of the item to offer.
+		 * @return <tt>true</tt> if the item was offered successfuly;
+		 *         <tt>false</tt> otherwise.
+		 */
 		public static boolean offer(final int id, final int count) {
 			if (!isOpen()) {
 				return false;
@@ -202,16 +309,23 @@ public class ExTrading {
 		}
 	}
 
-	public enum TradeScreen {
-
+	public static enum TransactionScreen {
 		CLOSED,
-		OFFERS,
-		FINAL;
+		FIRST,
+		SECOND;
 	}
 
 	public static int WIDGET_CHAT = 137;
 	public static int WIDGET_CHAT_COMPONENT = 58;
 
+	/**
+	 * Accepts a trade from the <tt>Player</tt> with the specified name.
+	 * 
+	 * @param name
+	 *            The name of the <tt>Player</tt>.
+	 * @return <tt>true</tt> if the trade was accepted; <tt>false</tt>
+	 *         otherwise.
+	 */
 	public static boolean acceptTradeFrom(final String name) {
 		if (OfferScreen.isOpen()) {
 			return OfferScreen.getTrader().getName().equalsIgnoreCase(name);
@@ -232,15 +346,30 @@ public class ExTrading {
 		return false;
 	}
 
-	public static TradeScreen getCurrentScreen() {
+	/**
+	 * Gets the current transaction screen. CLOSED - There is no trade
+	 * happening; FIRST - The first screen for offering items; SECOND - The last
+	 * screen for accepting.
+	 * 
+	 * @return The current transaction screen or null if widget is closed
+	 */
+	public static TransactionScreen getTransactionScreen() {
 		if (OfferScreen.isOpen()) {
-			return TradeScreen.OFFERS;
+			return TransactionScreen.FIRST;
 		} else if (AcceptScreen.isOpen()) {
-			return TradeScreen.FINAL;
+			return TransactionScreen.SECOND;
 		}
-		return TradeScreen.CLOSED;
+		return TransactionScreen.CLOSED;
 	}
 
+	/**
+	 * Trades with the <tt>Player</tt> that has the specified name.
+	 * 
+	 * @param name
+	 *            The name of the <tt>Player</tt>.
+	 * @return <tt>true</tt> if the trade offer was sent; <tt>false</tt>
+	 *         otherwise.
+	 */
 	public static boolean tradeWith(final String name) {
 		if (OfferScreen.isOpen()) {
 			return OfferScreen.getTrader().getName().equalsIgnoreCase(name);
@@ -248,7 +377,7 @@ public class ExTrading {
 			return AcceptScreen.getTrader().getName().equalsIgnoreCase(name);
 		}
 		final Player t = Players.getNearest(name);
-		if (t == null || t.interact("Trade with " + name)) {
+		if (t == null || !t.isOnScreen() || t.interact("Trade with " + name)) {
 			return false;
 		}
 		for (int i = 0; !Game.getLastMessage().toLowerCase().contains("sending trade offer...") && i < 10; i += 1) {
