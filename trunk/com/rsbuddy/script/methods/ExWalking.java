@@ -5,6 +5,7 @@ import com.rsbuddy.script.util.Filter;
 import com.rsbuddy.script.util.Random;
 import com.rsbuddy.script.wrappers.Area;
 import com.rsbuddy.script.wrappers.GameObject;
+import com.rsbuddy.script.wrappers.GameObject.Type;
 import com.rsbuddy.script.wrappers.LocalPath;
 import com.rsbuddy.script.wrappers.Tile;
 import com.rsbuddy.script.wrappers.TilePath;
@@ -18,7 +19,6 @@ import org.rsbuddy.tabs.Quest;
 /**
  * @author Ramus
  */
-@SuppressWarnings("unused")
 public class ExWalking {
 
 	public static enum Ferry {
@@ -249,6 +249,12 @@ public class ExWalking {
 		if (localPath == null) {
 			return false;
 		}
+		if (!traversePlane(dest, localPath)) {
+			return false;
+		}
+		if (!traverseDoor(dest, localPath)) {
+			return false;
+		}
 		if (localPath.isValid()) {
 			if (localPath.getEnd().isOnScreen()) {
 				return localPath.getEnd().interact("Walk here");
@@ -256,9 +262,6 @@ public class ExWalking {
 				return localPath.getEnd().interact("Walk here");
 			}
 			return localPath.traverse();
-		}
-		if (!traverseDoor(dest, localPath)) {
-			return false;
 		}
 		return traverse(dest);
 	}
@@ -269,7 +272,7 @@ public class ExWalking {
 			@Override
 			public boolean accept(final GameObject go) {
 				if (go == null || go.getDef() == null || go.getDef().getActions() == null
-						|| go.getDef().getName() == null) {
+						|| go.getDef().getName() == null || !go.getType().equals(Type.INTERACTIVE)) {
 					return false;
 				}
 				boolean found = false;
@@ -286,7 +289,7 @@ public class ExWalking {
 				for (int j = 0; j < OBSTACLES[i].length; j += 1) {
 					for (final String act : go.getDef().getActions()) {
 						if (OBSTACLES[i][j].equalsIgnoreCase(act)) {
-							ExWalking.action = act;
+							action = act;
 							return true;
 						}
 					}
@@ -307,6 +310,58 @@ public class ExWalking {
 			return false;
 		}
 		for (int i = 0; block != null && i < 10; i += 1) {
+			Task.sleep(250);
+		}
+		return true;
+	}
+
+	private static boolean traversePlane(final Tile dest, final LocalPath localPath) {
+		final GameObject plane = Objects.getNearest(new Filter<GameObject>() {
+
+			@Override
+			public boolean accept(final GameObject go) {
+				if (go == null || go.getDef() == null || go.getDef().getActions() == null
+						|| go.getDef().getName() == null || !go.getType().equals(Type.INTERACTIVE)) {
+					return false;
+				}
+				boolean found = false;
+				int i;
+				for (i = 0; i < PLANE_OBSTACLES.length; i += 1) {
+					if (go.getDef().getName().equalsIgnoreCase(PLANE_OBSTACLES[i][0])) {
+						found = true;
+						break;
+					}
+				}
+				if (found) {
+					return false;
+				}
+				for (int j = 0; j < PLANE_OBSTACLES[i].length; j += 1) {
+					for (final String act : go.getDef().getActions()) {
+						if (PLANE_OBSTACLES[i][j].equalsIgnoreCase(act)) {
+							action = act;
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		});
+		if (plane == null || action == null) {
+			return true;
+		}
+		if (Players.getLocal().getLocation().getFloor() < dest.getFloor() && !action.equalsIgnoreCase("climb-up")) {
+			return traverse(dest);
+		} else if (Players.getLocal().getLocation().getFloor() > dest.getFloor()
+				&& !action.equalsIgnoreCase("climb-down")) {
+			return traverse(dest);
+		}
+		if (!plane.isOnScreen()) {
+			return plane.getLocation().clickOnMap();
+		}
+		if (!plane.interact(action)) {
+			return false;
+		}
+		for (int i = 0; plane != null && i < 10; i += 1) {
 			Task.sleep(250);
 		}
 		return true;
