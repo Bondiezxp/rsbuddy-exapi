@@ -545,10 +545,9 @@ public class ExMouse {
 		if (!Mouse.isPresent()) {
 			return;
 		}
-
 		Mouse.moveOffScreen();
 		Task.sleep(waitTime);
-		Mouse.move(mouse.x + Random.nextInt(-10, 10), mouse.y + Random.nextInt(-10, 10));
+		Mouse.move(mouse.x, mouse.y, Random.nextInt(-50, 50), Random.nextInt(-50, 50));
 	}
 
 	/**
