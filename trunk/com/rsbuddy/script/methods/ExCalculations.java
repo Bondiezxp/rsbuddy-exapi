@@ -1,13 +1,11 @@
 package com.rsbuddy.script.methods;
 
 import com.rsbuddy.script.util.Random;
-import com.rsbuddy.script.wrappers.Model;
-import com.rsbuddy.script.wrappers.Tile;
+import com.rsbuddy.script.wrappers.Locatable;
+import com.rsbuddy.script.wrappers.Targetable;
 
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.util.LinkedList;
 
 /**
  * @author Ramus
@@ -15,67 +13,22 @@ import java.util.LinkedList;
 public class ExCalculations {
 
 	/**
-	 * Gets the center point of a model.
+	 * Gets a random point of the specified Locatable.
 	 * 
-	 * @param model
-	 *            The model.
-	 * @return The center point of the model.
+	 * @param locatable
+	 *            The <tt>Locatable</tt> to get a random point of.
+	 * @return A random point in the Locatable.
 	 */
-	public static Point getModelCenter(final Model model) {
-		if (model == null) {
+	public static Point getRandomPoint(final Locatable locatable) {
+		final Point p = locatable.getLocation().getPoint(0, 1, 0);
+		final int x = p.x;
+		final int y = p.y;
+		final int width = locatable.getLocation().getPoint(1, 1, 0).x - x;
+		final int height = locatable.getLocation().getPoint(1, 1, 0).y - y;
+		if (x == -1 || y == -1 || width == -1 || height == -1) {
 			return null;
 		}
-		final Polygon[] triangles = model.getTriangles();
-		final LinkedList<Point> points = new LinkedList<Point>();
-		for (final Polygon triangle : triangles) {
-			for (int i = 0; i < triangle.npoints; i += 1) {
-				points.add(new Point(triangle.xpoints[i], triangle.ypoints[i]));
-			}
-		}
-		int xTotal = 0;
-		int yTotal = 0;
-		for (final Point p : points) {
-			xTotal += p.x;
-			yTotal += p.y;
-		}
-		if (points.size() <= 5) {
-			return null;
-		}
-		return new Point(xTotal / points.size(), yTotal / points.size());
-	}
-
-	/**
-	 * Gets a random point in the specified model.
-	 * 
-	 * @param model
-	 *            The model to get a random point of.
-	 * @return A random point in the model.
-	 */
-	public static Point getRandomPoint(final Model model) {
-		if (model == null || model.getTriangles() == null || model.getTriangles().length < 1) {
-			return null;
-		}
-		final Polygon[] triangles = model.getTriangles();
-		return getRandomPoint(triangles[Random.nextInt(0, triangles.length)]);
-	}
-
-	/**
-	 * Gets a random point in the specified polygon.
-	 * 
-	 * @param p
-	 *            The polygon to get a random point of.
-	 * @return A random point in the polygon.
-	 */
-	public static Point getRandomPoint(final Polygon p) {
-		double a = Math.random();
-		double b = Math.random();
-		if (a + b >= 1) {
-			a = 1 - a;
-			b = 1 - b;
-		}
-		final double c = 1 - a - b;
-		return new Point((int) (a * p.xpoints[0] + b * p.xpoints[1] + c * p.xpoints[2]), (int) (a * p.ypoints[0] + b
-				* p.ypoints[1] + c * p.ypoints[2]));
+		return new Point(Random.nextGaussian(x, x + width, 2), Random.nextGaussian(y, y + height, 2));
 	}
 
 	/**
@@ -86,23 +39,44 @@ public class ExCalculations {
 	 * @return A random point in the rectangle.
 	 */
 	public static Point getRandomPoint(final Rectangle rect) {
-		return new Point(Random.nextInt(rect.x, rect.x + rect.width + 1), Random.nextInt(rect.y, rect.y + rect.height
-				+ 1));
+		return new Point(Random.nextGaussian(rect.x, rect.x + rect.width, 2), Random.nextGaussian(rect.y, rect.y
+				+ rect.height, 2));
 	}
 
 	/**
-	 * Gets a random point of the specified tile.
+	 * Gets a random point in the specified model.
 	 * 
-	 * @param tile
-	 *            The tile to get a random point of.
-	 * @return A random point in the tile.
+	 * @param target
+	 *            The model to get a random point of.
+	 * @return A random point in the model.
 	 */
-	public static Point getRandomPoint(final Tile tile) {
-		final Point bl = tile.getPoint(0, 0, 0);
-		final Point br = tile.getPoint(1, 0, 0);
-		final Point tr = tile.getPoint(1, 1, 0);
-		final Point tl = tile.getPoint(0, 1, 0);
-		return getRandomPoint(new Polygon(new int[] { bl.x, br.x, tr.x, tl.x }, new int[] { bl.y, br.y, tr.y, tl.y }, 4));
+	public static Point getRandomPoint(final Targetable target) {
+		int x = -1;
+		int y = -1;
+		int width = -1;
+		int height = -1;
+		for (int i = 500; i > 0; i -= 1) {
+			final Point center = target.getCenterPoint();
+			if (x != -1 && y != -1 && width != -1 && height != -1) {
+				break;
+			}
+			if (x == -1 && target.contains(new Point(center.x - i, center.y))) {
+				x = center.x - i;
+			}
+			if (y == -1 && target.contains(new Point(center.x, center.y - i))) {
+				y = center.y - i;
+			}
+			if (width == -1 && target.contains(new Point(center.x + i, center.y))) {
+				width = i;
+			}
+			if (height == -1 && target.contains(new Point(center.x, center.y + i))) {
+				height = i;
+			}
+		}
+		if (x == -1 || y == -1 || width == -1 || height == -1) {
+			return null;
+		}
+		return new Point(Random.nextGaussian(x, x + width, 2), Random.nextGaussian(y, y + height, 2));
 	}
 
 	/**

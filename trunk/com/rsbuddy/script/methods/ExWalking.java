@@ -263,6 +263,9 @@ public class ExWalking {
 			}
 			return localPath.traverse();
 		}
+		if (dest == null) {
+			return false;
+		}
 		return traverse(dest);
 	}
 
@@ -297,7 +300,7 @@ public class ExWalking {
 				return false;
 			}
 		});
-		if (Calculations.distanceTo(dest) < Calculations.distanceTo(block)) {
+		if (dest != null && Calculations.distanceTo(dest) < Calculations.distanceTo(block)) {
 			return traverse(dest);
 		}
 		if (block == null || action == null) {
@@ -349,9 +352,10 @@ public class ExWalking {
 		if (plane == null || action == null) {
 			return true;
 		}
-		if (Players.getLocal().getLocation().getFloor() < dest.getFloor() && !action.equalsIgnoreCase("climb-up")) {
+		if (dest != null && Players.getLocal().getLocation().getFloor() < dest.getFloor()
+				&& !action.equalsIgnoreCase("climb-up")) {
 			return traverse(dest);
-		} else if (Players.getLocal().getLocation().getFloor() > dest.getFloor()
+		} else if (dest != null && Players.getLocal().getLocation().getFloor() > dest.getFloor()
 				&& !action.equalsIgnoreCase("climb-down")) {
 			return traverse(dest);
 		}
