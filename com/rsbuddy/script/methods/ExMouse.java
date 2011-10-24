@@ -3,11 +3,8 @@ package com.rsbuddy.script.methods;
 import com.rsbuddy.script.graphics.Util;
 import com.rsbuddy.script.task.Task;
 import com.rsbuddy.script.util.Random;
-import com.rsbuddy.script.wrappers.GameObject;
 import com.rsbuddy.script.wrappers.Locatable;
-import com.rsbuddy.script.wrappers.Model;
-import com.rsbuddy.script.wrappers.Npc;
-import com.rsbuddy.script.wrappers.Tile;
+import com.rsbuddy.script.wrappers.Targetable;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -184,57 +181,74 @@ public class ExMouse {
 	}
 
 	/**
-	 * Hovers the specified game objects' action. This will open the menu if it
-	 * has to.
+	 * Hovers the specified <tt>Locatable</tt> action. This will open the menu
+	 * if it has to.
 	 * 
-	 * @param go
-	 *            The game object to hover.
+	 * @param tile
+	 *            The Locatable to hover.
 	 * @param action
 	 *            The action in the menu to hover.
 	 * @return <tt>true</tt> if the action was hovered.
 	 */
-	public static boolean hover(final GameObject go, final String action) {
-		if (go == null) {
+	public static boolean hover(final Locatable tile, final String action) {
+		if (tile == null) {
 			return false;
 		}
-		final Model model = go.getModel();
-		if (model == null) {
-			if (go.getLocation() == null) {
-				return false;
-			}
-			return hover(go.getLocation(), action);
-		}
-		return hover(go.getModel(), action);
-	}
-
-	/**
-	 * Hovers the specified models' action. This will open the menu if it has
-	 * to.
-	 * 
-	 * @param model
-	 *            The model to hover.
-	 * @param action
-	 *            The action in the menu to hover.
-	 * @return <tt>true</tt> if the action was hovered.
-	 */
-	public static boolean hover(final Model model, final String action) {
-		if (model == null) {
-			return false;
-		}
-		Point p = ExCalculations.getRandomPoint(model);
+		Point p = ExCalculations.getRandomPoint(tile);
 		if (!ExCalculations.isPointOnScreen(p)) {
 			return false;
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 20 && model != null && (model.contains(p) || !Menu.contains(action))
+		for (int i = 0; i < 20 && !Menu.contains(action) && tile != null && tile.getLocation().isOnScreen(); i += 1) {
+			p = ExCalculations.getRandomPoint(tile);
+			if (!ExCalculations.isPointOnScreen(p)) {
+				return false;
+			}
+			Mouse.move(p);
+			if (!tile.getLocation().contains(p)) {
+				continue;
+			}
+			if (action == null) {
+				Mouse.setSpeed(speed);
+				return true;
+			}
+		}
+		Mouse.setSpeed(speed);
+		if (Menu.contains(action)) {
+			return ExMenu.hoverAction(action);
+		}
+		return false;
+	}
+
+	/**
+	 * Hovers the specified <tt>Targetable</tt> action. This will open the menu
+	 * if it has to.
+	 * 
+	 * @param target
+	 *            The Targetable to hover.
+	 * @param action
+	 *            The action in the menu to hover.
+	 * @return <tt>true</tt> if the action was hovered.
+	 */
+	public static boolean hover(final Targetable target, final String action) {
+		if (target == null) {
+			return false;
+		}
+		Point p = ExCalculations.getRandomPoint(target);
+		if (!ExCalculations.isPointOnScreen(p)) {
+			return false;
+		}
+		final int speed = Mouse.getSpeed();
+		Mouse.setSpeed(Random.nextInt(5, 10));
+		for (int i = 0; i < 20 && target != null && (target.contains(p) || !Menu.contains(action))
 				&& ExCalculations.isPointOnScreen(p); i += 1) {
-			p = ExCalculations.getRandomPoint(model);
+			p = ExCalculations.getRandomPoint(target);
 			if (!ExCalculations.isPointOnScreen(p)) {
 				return false;
 			}
 			Mouse.move(p);
-			if (!model.contains(p)) {
+			if (!target.contains(p)) {
 				continue;
 			}
 			if (action == null) {
@@ -250,165 +264,27 @@ public class ExMouse {
 	}
 
 	/**
-	 * Hovers the specified tiles' action. This will open the menu if it has to.
+	 * Interacts with the specified Locatable.
 	 * 
-	 * @param tile
-	 *            The tile to hover.
+	 * @param locatable
+	 *            The <tt>Locatable</tt> to interact with.
 	 * @param action
-	 *            The action in the menu to hover.
-	 * @return <tt>true</tt> if the action was hovered.
+	 *            The action to do.
+	 * @return <tt>true</tt> if the Locatable was interacted with successfully;
+	 *         <tt>false</tt> otherwise.
 	 */
-	public static boolean hover(final Tile tile, final String action) {
-		if (tile == null) {
+	public static boolean interact(final Locatable locatable, final String action) {
+		if (locatable == null) {
 			return false;
 		}
-		Point p = ExCalculations.getRandomPoint(tile);
+		Point p = ExCalculations.getRandomPoint(locatable);
 		if (!ExCalculations.isPointOnScreen(p)) {
 			return false;
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 20 && !Menu.contains(action) && tile != null && tile.isOnScreen(); i += 1) {
-			p = ExCalculations.getRandomPoint(tile);
-			if (!ExCalculations.isPointOnScreen(p)) {
-				return false;
-			}
-			Mouse.move(p);
-			if (!tile.contains(p)) {
-				continue;
-			}
-			if (action == null) {
-				Mouse.setSpeed(speed);
-				return true;
-			}
-		}
-		Mouse.setSpeed(speed);
-		if (Menu.contains(action)) {
-			return ExMenu.hoverAction(action);
-		}
-		return false;
-	}
-
-	/**
-	 * Hovers the specified tiles' action. This will open the menu if it has to.
-	 * 
-	 * @param tile
-	 *            The tile to hover.
-	 * @param action
-	 *            The action in the menu to hover.
-	 * @param dX
-	 *            The x value of were to click on the tile (0.0 - 1.0).
-	 * @param dY
-	 *            The y value of were to click on the tile (0.0 - 1.0).
-	 * @param height
-	 *            The height at which the tile is.
-	 * @return <tt>true</tt> if the action was hovered.
-	 */
-	public static boolean hover(final Tile tile, final String action, final double dX, final double dY, final int height) {
-		if (tile == null) {
-			return false;
-		}
-		Point p = tile.getPoint(dX, dY, height);
-		if (!ExCalculations.isPointOnScreen(p)) {
-			return false;
-		}
-		final int speed = Mouse.getSpeed();
-		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 20 && !Menu.contains(action) && tile != null && tile.isOnScreen(); i += 1) {
-			p = tile.getPoint(dX + Random.nextDouble(-0.1, 0.1), dY + Random.nextDouble(-0.1, 0.1), height);
-			if (!ExCalculations.isPointOnScreen(p)) {
-				return false;
-			}
-			Mouse.move(p);
-			if (!tile.contains(p)) {
-				continue;
-			}
-			if (action == null) {
-				Mouse.setSpeed(speed);
-				return true;
-			}
-		}
-		Mouse.setSpeed(speed);
-		if (Menu.contains(action)) {
-			return ExMenu.hoverAction(action);
-		}
-		return false;
-	}
-
-	/**
-	 * Interacts with the specified game object.
-	 * 
-	 * @param go
-	 *            The game object to interact with.
-	 * @param action
-	 *            The action to do.
-	 * @return <tt>true</tt> if the game object was interacted with
-	 *         successfully; <tt>false</tt> otherwise.
-	 */
-	public static boolean interact(final GameObject go, final String action) {
-		if (go == null) {
-			return false;
-		}
-		final Model model = go.getModel();
-		if (model == null) {
-			if (go.getLocation() == null) {
-				return false;
-			}
-			return interact(go.getLocation(), action);
-		}
-		if (!interact(model, action)) {
-			return go.interact(action);
-		} else {
-			return true;
-		}
-	}
-
-	/**
-	 * Interacts with the specified locatable.
-	 * 
-	 * @param loc
-	 *            The locatable to interact with.
-	 * @param action
-	 *            The action to do.
-	 * @return <tt>true</tt> if the locatable was interacted with successfully;
-	 *         <tt>false</tt> otherwise.
-	 */
-	public static boolean interact(final Locatable loc, final String action) {
-		if (loc == null) {
-			return false;
-		}
-		if (loc.getLocation() == null) {
-			return false;
-		}
-		if (!interact(loc.getLocation(), action)) {
-			return loc.getLocation().interact(action);
-		} else {
-			return true;
-		}
-	}
-
-	/**
-	 * Interacts with the specified model.
-	 * 
-	 * @param model
-	 *            The model to interact with.
-	 * @param action
-	 *            The action to do.
-	 * @return <tt>true</tt> if the model was interacted with successfully;
-	 *         <tt>false</tt> otherwise.
-	 */
-	public static boolean interact(final Model model, final String action) {
-		if (model == null) {
-			return false;
-		}
-		Point p = ExCalculations.getRandomPoint(model);
-		if (ExCalculations.isPointOnScreen(p)) {
-			return false;
-		}
-		final int speed = Mouse.getSpeed();
-		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 20 && !Menu.contains(action) && model != null && ExCalculations.isPointOnScreen(p); i += 1) {
-			p = ExCalculations.getRandomPoint(model);
+		for (int i = 0; i < 20 && !Menu.contains(action) && locatable != null && locatable.getLocation().isOnScreen(); i += 1) {
+			p = ExCalculations.getRandomPoint(locatable);
 			if (!ExCalculations.isPointOnScreen(p)) {
 				return false;
 			}
@@ -422,97 +298,28 @@ public class ExMouse {
 	}
 
 	/**
-	 * Interacts with the specified npc.
+	 * Interacts with the specified Targetable.
 	 * 
-	 * @param npc
-	 *            The npc to interact with.
+	 * @param target
+	 *            The <tt>Targetable</tt> to interact with.
 	 * @param action
 	 *            The action to do.
-	 * @return <tt>true</tt> if the npc was interacted with successfully;
+	 * @return <tt>true</tt> if the Targetable was interacted with successfully;
 	 *         <tt>false</tt> otherwise.
 	 */
-	public static boolean interact(final Npc npc, final String action) {
-		if (npc == null) {
+	public static boolean interact(final Targetable target, final String action) {
+		if (target == null) {
 			return false;
 		}
-		final Model model = npc.getModel();
-		if (model == null) {
-			if (npc.getLocation() == null) {
-				return false;
-			}
-			return interact(npc.getLocation(), action);
-		}
-		if (!interact(model, action)) {
-			return npc.interact(action);
-		} else {
-			return true;
-		}
-	}
-
-	/**
-	 * Interacts with the specified tile.
-	 * 
-	 * @param tile
-	 *            The tile to interact with.
-	 * @param action
-	 *            The action to do.
-	 * @return <tt>true</tt> if the tile was interacted with successfully;
-	 *         <tt>false</tt> otherwise.
-	 */
-	public static boolean interact(final Tile tile, final String action) {
-		if (tile == null) {
-			return false;
-		}
-		Point p = ExCalculations.getRandomPoint(tile);
-		if (!ExCalculations.isPointOnScreen(p)) {
+		Point p = ExCalculations.getRandomPoint(target);
+		if (p == null || !ExCalculations.isPointOnScreen(p)) {
 			return false;
 		}
 		final int speed = Mouse.getSpeed();
 		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 20 && !Menu.contains(action) && tile != null && tile.isOnScreen(); i += 1) {
-			p = ExCalculations.getRandomPoint(tile);
-			if (!ExCalculations.isPointOnScreen(p)) {
-				return false;
-			}
-			Mouse.move(p);
-		}
-		Mouse.setSpeed(speed);
-		if (Menu.contains(action)) {
-			return Menu.click(action);
-		}
-		return false;
-	}
-
-	/**
-	 * Interacts with the specified tile.
-	 * 
-	 * @param tile
-	 *            The tile to interact with.
-	 * @param action
-	 *            The action to do.
-	 * @param dX
-	 *            The x value of were to click on the tile (0.0 - 1.0).
-	 * @param dY
-	 *            The y value of were to click on the tile (0.0 - 1.0).
-	 * @param height
-	 *            The height at which the tile is.
-	 * @return <tt>true</tt> if the tile was interacted with successfully;
-	 *         <tt>false</tt> otherwise.
-	 */
-	public static boolean interact(final Tile tile, final String action, final double dX, final double dY,
-			final int height) {
-		if (tile == null) {
-			return false;
-		}
-		Point p = tile.getPoint(dX, dY, height);
-		if (!ExCalculations.isPointOnScreen(p)) {
-			return false;
-		}
-		final int speed = Mouse.getSpeed();
-		Mouse.setSpeed(Random.nextInt(5, 10));
-		for (int i = 0; i < 20 && !Menu.contains(action) && tile.isOnScreen(); i += 1) {
-			p = tile.getPoint(dX + Random.nextDouble(-0.1, 0.1), dY + Random.nextDouble(-0.1, 0.1), height);
-			if (!ExCalculations.isPointOnScreen(p)) {
+		for (int i = 0; i < 20 && !Menu.contains(action) && target != null; i += 1) {
+			p = ExCalculations.getRandomPoint(target);
+			if (p == null || !ExCalculations.isPointOnScreen(p)) {
 				return false;
 			}
 			Mouse.move(p);
